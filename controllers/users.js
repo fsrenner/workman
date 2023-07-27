@@ -1,0 +1,55 @@
+const logger = require('../logger');
+const usersService = require('../service').users;
+
+const getUsers = async (req, res) => {
+  logger.debug(req.user);
+  logger.debug(req.session);
+  try {
+    return await usersService.getUsers(req, res);
+  } catch (e) {
+    logger.error(
+      `There was a problem getting the users. Error: ${JSON.stringify(e)}`
+    );
+    return res.status(500).json({ e });
+  }
+};
+
+const getUserById = async (req, res) => {
+  try {
+    return await usersService.getUserById(req, res);
+  } catch (e) {
+    logger.error(
+      `There was a problem getting the user. Error: ${JSON.stringify(e)}`
+    );
+    return res.status(500).json({ e });
+  }
+};
+
+const createUser = async (req, res) => {
+  try {
+    return await usersService.createUser(req, res);
+  } catch (e) {
+    logger.error(
+      `There was a problem creating the user. Error: ${JSON.stringify(e)}`
+    );
+    return res.status(500).json({ e });
+  }
+};
+
+const verifyUser = async (req, res) => {
+  try {
+    return await usersService.verifyUser(req, res);
+  } catch (e) {
+    logger.error(
+      `There was a problem verifying the user. Error: ${JSON.stringify(e)}`
+    );
+    return res.status(500).json({ e });
+  }
+};
+
+module.exports = {
+  getUsers,
+  getUserById,
+  createUser,
+  verifyUser,
+};
