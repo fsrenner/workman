@@ -1,0 +1,56 @@
+{
+  "name": "workman",
+  "version": "0.0.1",
+  "description": "A Node.js Express API connected to a PostgreSQL database that is the back-end for the Workman application, which is an application used to connect christians with christian businesses for the sake of supporting those business with similar values as them.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon --inspect ./index.js",
+    "start": "node ./index.js",
+    "lint": "eslint \"./**/*.js\" --quiet",
+    "lintFull": "eslint \"./**/*.js\"",
+    "lintFix": "eslint --fix './**/*.js'"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt": "^5.1.0",
+    "compression": "^1.7.4",
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "express-session": "^1.17.3",
+    "helmet": "^7.0.0",
+    "nodemailer": "^6.9.4",
+    "passport": "^0.6.0",
+    "passport-local": "^1.0.0",
+    "pg": "^8.11.1",
+    "pino": "^8.14.1",
+    "pino-pretty": "^10.1.0"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm lint",
+      "pre-push": "npm test"
+    }
+  },
+  "devDependencies": {
+    "@babel/preset-env": "^7.22.9",
+    "chai": "^4.3.7",
+    "debug": "^4.3.4",
+    "eslint": "^8.45.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-config-node": "^4.1.0",
+    "eslint-config-prettier": "^8.9.0",
+    "eslint-plugin-import": "^2.27.5",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-prettier": "^5.0.0",
+    "husky": "^8.0.3",
+    "mocha": "^10.2.0",
+    "prettier": "^3.0.0",
+    "sinon": "^15.2.0",
+    "sinon-chai": "^3.7.0",
+    "swagger-ui-express": "^5.0.0"
+  }
+}
