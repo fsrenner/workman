@@ -1,7 +1,13 @@
 const bcrypt = require('bcrypt');
 const db = require('../db');
-const config = require('../config');
-const queries = require('../queries/users');
+const { GET_EMAIL_OF_USERS } = require('../queries/users');
+const {
+  getUserRoles,
+  getRoles,
+  isAdmin,
+  isWriter,
+  isReader,
+} = require('./permissions');
 
 exports.createHashedPassword = async (password) => {
   const salt = await bcrypt.genSalt(10);
@@ -10,7 +16,13 @@ exports.createHashedPassword = async (password) => {
 };
 
 exports.isEmailUnique = async (email) => {
-  const results = await db.query(queries.GET_EMAIL_OF_USERS);
+  const results = await db.query(GET_EMAIL_OF_USERS);
   const emailList = results.rows.map((row) => row.email);
   return emailList.includes(email);
 };
+
+exports.getUserRoles = getUserRoles;
+exports.getRoles = getRoles;
+exports.isAdmin = isAdmin;
+exports.isWriter = isWriter;
+exports.isReader = isReader;

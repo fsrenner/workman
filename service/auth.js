@@ -1,16 +1,20 @@
 const passport = require('passport');
 const logger = require('../logger');
+const { getUserRoles } = require('../util');
 
 const login = (req, res, next) =>
-  passport.authenticate(['local'], (error, user, info) => {
+  passport.authenticate(['local'], async (error, user, info) => {
     if (error) {
       return res.status(500).json({ error });
     }
     if (!user) {
       return res.status(404).json({ message: info.message });
     }
-    req.session.userId = user.user_id;
-    logger.info(req.session);
+    const userId = user.user_id;
+    const roles = await getUserRoles(userId);
+    req.session.userId = userId;
+    req.session.roles = roles;
+    logger.debug(req.session);
     return res.json({ user });
   })(req, res, next);
 

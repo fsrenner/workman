@@ -1,6 +1,5 @@
 const passport = require('passport');
 const router = require('express').Router();
-const logger = require('../logger');
 const { isAuthenticated } = require('../config/passport');
 const middlware = require('../middleware');
 
@@ -28,5 +27,7 @@ router.get('/users', isAuthenticated, usersController.getUsers);
 router.get('/users/:userId', isAuthenticated, usersController.getUserById);
 router.post('/users', usersController.createUser);
 router.post('/users/verify/:userId', usersController.verifyUser);
+router.put('/users/:userId', isAuthenticated, usersController.updateUser);
+router.delete('/users/:userId', isAuthenticated, usersController.deleteUser);
 
 module.exports = router;
