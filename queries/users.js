@@ -10,6 +10,7 @@ exports.GET_USERS = `
         address,
         city,
         state,
+        zip,
         country,
         last_login,
         created_date,
@@ -37,6 +38,7 @@ exports.CREATE_USER = `
         address,
         city,
         state,
+        zip,
         country,
         last_login,
         created_date,
@@ -55,6 +57,7 @@ exports.CREATE_USER = `
         $9,
         $10,
         $11,
+        $11,
         null,
         now(),
         0,
@@ -67,12 +70,6 @@ exports.VERIFY_USER = `
     UPDATE users
     SET verified = TRUE
     WHERE user_id = $1;
-`;
-
-exports.UPDATE_USER_BY_ID = `
-    UPDATE users
-    SET
-    WHERE user_id = ;
 `;
 
 exports.UPDATE_USER_LOGIN = `

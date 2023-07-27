@@ -47,9 +47,33 @@ const verifyUser = async (req, res) => {
   }
 };
 
+const updateUser = async (req, res) => {
+  try {
+    return await usersService.updateUser(req, res);
+  } catch (e) {
+    logger.error(
+      `There was a problem updating the user. Error: ${JSON.stringify(e)}`
+    );
+    return res.status(500).json({ e });
+  }
+};
+
+const deleteUser = async (req, res) => {
+  try {
+    return await usersService.deleteUser(req, res);
+  } catch (e) {
+    logger.error(
+      `There was a problem deleting the user. Error: ${JSON.stringify(e)}`
+    );
+    return res.status(500).json({ e });
+  }
+};
+
 module.exports = {
   getUsers,
   getUserById,
   createUser,
   verifyUser,
+  updateUser,
+  deleteUser,
 };
