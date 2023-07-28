@@ -9,6 +9,8 @@ const {
   isReader,
 } = require('./permissions');
 
+const { userTableFields, usersRolesTableFields } = require('./constants');
+
 exports.createHashedPassword = async (password) => {
   const salt = await bcrypt.genSalt(10);
   const hash = await bcrypt.hash(password, salt);
@@ -21,8 +23,18 @@ exports.isEmailUnique = async (email) => {
   return emailList.includes(email);
 };
 
+exports.getWhereClauseParameters = (filterArray) => {
+  if (!filterArray || !Array.isArray(filterArray) || filterArray.length === 0) {
+    return '';
+  }
+  return `WHERE ${filterArray.join(' AND ')}`;
+};
+
 exports.getUserRoles = getUserRoles;
 exports.getRoles = getRoles;
 exports.isAdmin = isAdmin;
 exports.isWriter = isWriter;
 exports.isReader = isReader;
+
+exports.userTableFields = userTableFields;
+exports.usersRolesTableFields = usersRolesTableFields;
