@@ -17,10 +17,9 @@ exports.GET_USERS = `
         created_by,
         updated_date,
         updated_by
-    FROM users
-`;
+    FROM users`;
 
-exports.GET_USER_BY_ID = `${this.GET_USERS} WHERE user_id = $1;`;
+exports.GET_USER_BY_ID = `${this.GET_USERS} WHERE user_id = $1`;
 
 exports.GET_USER_BY_USERNAME = `SELECT * FROM users WHERE username = $1`;
 
@@ -63,19 +62,16 @@ exports.CREATE_USER = `
         0,
         null,
         null
-    ) RETURNING *;
-`;
+    ) RETURNING *;`;
 
 exports.VERIFY_USER = `
     UPDATE users
     SET verified = TRUE
-    WHERE user_id = $1;
-`;
+    WHERE user_id = $1;`;
 
 exports.UPDATE_USER_LOGIN = `
     UPDATE users
     SET last_login = now()
-    WHERE user_id = $1;
-`;
+    WHERE user_id = $1;`;
 
 exports.DELETE_USER = `DELETE FROM users WHERE user_id = $1;`;

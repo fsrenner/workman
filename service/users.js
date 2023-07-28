@@ -1,5 +1,6 @@
 const db = require('../db');
 const logger = require('../logger');
+
 const {
   GET_USERS,
   GET_USER_BY_ID,
@@ -7,11 +8,176 @@ const {
   CREATE_USER,
   DELETE_USER,
 } = require('../queries/users');
-const { createHashedPassword, isEmailUnique, isWriter } = require('../util');
+const {
+  createHashedPassword,
+  isEmailUnique,
+  userTableFields,
+  getWhereClauseParameters,
+} = require('../util');
 const { sendVerificationEmail } = require('./email');
 
 const getUsers = async (req, res) => {
-  const result = await db.query(GET_USERS);
+  const DESC = 'desc';
+  const ASC = 'asc';
+  const params = [];
+  const filtering = [];
+  let fieldIncrementer = 1;
+  let limitFilter = '';
+  let offsetFilter = '';
+  let orderBy = '';
+  const {
+    id,
+    username,
+    email,
+    firstName,
+    lastName,
+    dob,
+    phone,
+    address,
+    city,
+    state,
+    zip,
+    country,
+    lastLogin,
+    createdDate,
+    createdBy,
+    updatedDate,
+    updatedBy,
+    verified,
+    sort,
+    limit,
+    offset,
+  } = req.query;
+  if (id) {
+    params.push(id);
+    filtering.push(`${userTableFields.id} = $${fieldIncrementer}`);
+    fieldIncrementer++;
+  }
+  if (username) {
+    params.push(username);
+    filtering.push(`${userTableFields.username} = $${fieldIncrementer}`);
+    fieldIncrementer++;
+  }
+  if (email) {
+    params.push(email);
+    filtering.push(`${userTableFields.email} = $${fieldIncrementer}`);
+    fieldIncrementer++;
+  }
+  if (firstName) {
+    params.push(firstName);
+    filtering.push(`${userTableFields.firstName} = $${fieldIncrementer}`);
+    fieldIncrementer++;
+  }
+  if (lastName) {
+    params.push(lastName);
+    filtering.push(`${userTableFields.lastName} = $${fieldIncrementer}`);
+    fieldIncrementer++;
+  }
+  if (dob) {
+    params.push(dob);
+    filtering.push(`${userTableFields.dob} = $${fieldIncrementer}`);
+    fieldIncrementer++;
+  }
+  if (phone) {
+    params.push(phone);
+    filtering.push(`${userTableFields.phone} = $${fieldIncrementer}`);
+    fieldIncrementer++;
+  }
+  if (address) {
+    params.push(address);
+    filtering.push(`${userTableFields.address} = $${fieldIncrementer}`);
+    fieldIncrementer++;
+  }
+  if (city) {
+    params.push(city);
+    filtering.push(`${userTableFields.city} = $${fieldIncrementer}`);
+    fieldIncrementer++;
+  }
+  if (state) {
+    params.push(state);
+    filtering.push(`${userTableFields.state} = $${fieldIncrementer}`);
+    fieldIncrementer++;
+  }
+  if (zip) {
+    params.push(zip);
+    filtering.push(`${userTableFields.zip} = $${fieldIncrementer}`);
+    fieldIncrementer++;
+  }
+  if (country) {
+    params.push(country);
+    filtering.push(`${userTableFields.country} = $${fieldIncrementer}`);
+    fieldIncrementer++;
+  }
+  if (lastLogin) {
+    params.push(lastLogin);
+    filtering.push(`${userTableFields.lastLogin} = $${fieldIncrementer}`);
+    fieldIncrementer++;
+  }
+  if (createdBy) {
+    params.push(createdBy);
+    filtering.push(`${userTableFields.createdBy} = $${fieldIncrementer}`);
+    fieldIncrementer++;
+  }
+  if (createdDate) {
+    params.push(createdDate);
+    filtering.push(`${userTableFields.createdDate} = $${fieldIncrementer}`);
+    fieldIncrementer++;
+  }
+  if (updatedBy) {
+    params.push(updatedBy);
+    filtering.push(`${userTableFields.updatedBy} = $${fieldIncrementer}`);
+    fieldIncrementer++;
+  }
+  if (updatedDate) {
+    params.push(updatedDate);
+    filtering.push(`${userTableFields.updatedDate} = $${fieldIncrementer}`);
+    fieldIncrementer++;
+  }
+  if (verified) {
+    params.push(verified);
+    filtering.push(`${userTableFields.verified} = $${fieldIncrementer}`);
+    fieldIncrementer++;
+  }
+  if (sort) {
+    const splitSort = sort.trim().split(' ');
+    const orderParam = splitSort[0].trim();
+    let direction = splitSort[1].trim();
+    if (!direction || direction === DESC) {
+      direction = DESC;
+    } else if (direction === ASC) {
+      direction = ASC;
+    } else {
+      direction = DESC;
+    }
+    const tableFieldValue = userTableFields[orderParam];
+
+    if (!tableFieldValue) {
+      orderBy = '';
+    } else {
+      orderBy = `ORDER BY ${tableFieldValue} ${direction}`;
+    }
+  }
+  if (limit) {
+    params.push(Number(limit));
+    limitFilter = `LIMIT $${fieldIncrementer}`;
+    fieldIncrementer++;
+  }
+  if (offset) {
+    params.push(offset);
+    offsetFilter = `OFFSET $${fieldIncrementer}`;
+    fieldIncrementer++;
+  }
+  const fullQuery = `
+    ${GET_USERS}
+    ${getWhereClauseParameters(filtering)}
+    ${orderBy}
+    ${limitFilter}
+    ${offsetFilter}
+  `;
+
+  logger.debug(fullQuery);
+  logger.debug(params);
+  const result = await db.query(fullQuery, params);
   return res.json({ users: result.rows });
 };
 
@@ -97,9 +263,11 @@ const verifyUser = async (req, res) => {
       message: 'The user id was missing from the request',
     });
   }
-  const { rows } = await db.query(VERIFY_USER, [userId]);
+  await db.query(VERIFY_USER, [userId]);
+  const message = `User : ${userId} email verfication was successful`;
+  logger.info(message);
   return res.json({
-    message: `User : ${userId} email verfication was successful`,
+    users: message,
   });
 };
 
@@ -123,14 +291,6 @@ const updateUser = async (req, res) => {
     verified,
   } = req.body;
   const { userId } = req.params;
-  const canUpdateUser =
-    req.session.userId === userId || isWriter(req.session.roles);
-
-  if (!canUpdateUser) {
-    return res.status(403).json({
-      message: 'You are not allowed to update this user',
-    });
-  }
 
   if (username) {
     updateFields.push(username);
@@ -212,23 +372,17 @@ const updateUser = async (req, res) => {
   `;
 
   const { rows } = await db.query(statement, updateFields);
+  logger.info(`Successfully updated user: ${JSON.stringify(rows[0])}`);
   return res.json({ users: rows[0] });
 };
 
 const deleteUser = async (req, res) => {
   const { userId } = req.params;
-  const canUpdateUser =
-    req.session.userId === userId || isWriter(req.session.roles);
-
-  if (!canUpdateUser) {
-    return res.status(403).json({
-      message: 'You are not allowed to delete this user',
-    });
-  }
-
-  const { rows } = await db.query(DELETE_USER, [userId]);
+  await db.query(DELETE_USER, [userId]);
+  const message = `User: ${userId} was successfully deleted`;
+  logger.info(message);
   return res.json({
-    users: `User: ${userId} was successfully deleted`,
+    users: message,
   });
 };
 
