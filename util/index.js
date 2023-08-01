@@ -19,8 +19,11 @@ exports.createHashedPassword = async (password) => {
 
 exports.isEmailUnique = async (email) => {
   const results = await db.query(GET_EMAIL_OF_USERS);
+  if (results.rows.length === 0) {
+    return true;
+  }
   const emailList = results.rows.map((row) => row.email);
-  return emailList.includes(email);
+  return !emailList.includes(email);
 };
 
 exports.getWhereClauseParameters = (filterArray) => {
