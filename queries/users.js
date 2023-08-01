@@ -19,7 +19,27 @@ exports.GET_USERS = `
         updated_by
     FROM users`;
 
-exports.GET_USER_BY_ID = `${this.GET_USERS} WHERE user_id = $1`;
+exports.GET_USER_BY_ID = `
+  SELECT 
+    username,
+    email,
+    first_name,
+    last_name,
+    date_of_birth,
+    phone_number,
+    address,
+    city,
+    state,
+    zip,
+    country,
+    last_login,
+    created_date,
+    created_by,
+    updated_date,
+    updated_by
+  FROM users 
+  WHERE user_id = $1
+`;
 
 exports.GET_USER_BY_USERNAME = `SELECT * FROM users WHERE username = $1`;
 
@@ -56,10 +76,10 @@ exports.CREATE_USER = `
         $9,
         $10,
         $11,
-        $11,
+        $12,
         null,
         now(),
-        0,
+        $13,
         null,
         null
     ) RETURNING *;`;

@@ -27,5 +27,14 @@ module.exports = {
         'no-plusplus': 'off',
         'no-process-exit': 'off',
         'class-methods-use-this': 'off'
-    }
+    },
+    overrides: [
+      {
+        files: ['*.spec.js'],
+        rules: {
+          'no-undef': 'off',
+          'node/no-unpublished-require': 'off',
+        }
+      }
+    ]
 };

@@ -11,7 +11,7 @@ const login = (req, res, next) =>
       return res.status(404).json({ message: info.message });
     }
     const userId = user.user_id;
-    const roles = await getUserRoles(userId);
+    const roles = await getUserRoles(Number(userId));
     req.session.userId = userId;
     req.session.roles = roles;
     logger.debug(req.session);

@@ -188,6 +188,7 @@ const getUserById = async (req, res) => {
 };
 
 const createUser = async (req, res) => {
+  const { userId } = req.session;
   const nonNullFields = [];
   const {
     username,
@@ -245,8 +246,9 @@ const createUser = async (req, res) => {
     address,
     city,
     state,
-    zip,
+    Number(zip),
     country,
+    userId || 0,
   ];
 
   const { rows } = await db.query(CREATE_USER, sqlParams);
