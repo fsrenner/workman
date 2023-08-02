@@ -1,17 +1,20 @@
 const { Pool } = require('pg');
 const config = require('../config');
 
-const query = async (sql, values) => {
-  const pool = new Pool(config.db);
-  // const results = !values ? await pool.query(sql, []) : await pool.query(sql, values);
-  const results = await pool.query({
+const query = async (sql, values, pool) => {
+  const queryParams = {
     text: sql,
     values: values || [],
-  });
-  await pool.end();
+  };
+  const finalPool = pool || new Pool(config.db);
+  const results = await finalPool.query(queryParams);
+  await finalPool.end();
   return results;
 };
 
+const getPool = (dbConfig) => new Pool(dbConfig || config.db);
+
 module.exports = {
   query,
+  getPool,
 };
