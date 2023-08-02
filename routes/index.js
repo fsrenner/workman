@@ -2,6 +2,8 @@ const passport = require('passport');
 const router = require('express').Router();
 const { isAuthenticated } = require('../config/passport');
 const {
+  notFound,
+  serverError,
   logging: { logApiTransaction },
   permissions: { canUpdate },
 } = require('../middleware');
@@ -38,5 +40,8 @@ router.delete(
   [isAuthenticated, canUpdate],
   usersController.deleteUser
 );
+
+router.use(notFound);
+router.use(serverError);
 
 module.exports = router;
