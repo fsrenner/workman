@@ -8,7 +8,7 @@ const logApiTransaction = (req, res, next) => {
       req.originalUrl
     } with content-type ${req.get('content-type')}`
   );
-  next();
+  return next();
 };
 
 module.exports = {

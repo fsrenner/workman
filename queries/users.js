@@ -1,23 +1,23 @@
 // User Queries
 exports.GET_USERS = `
-    SELECT 
-        username,
-        email,
-        first_name,
-        last_name,
-        date_of_birth,
-        phone_number,
-        address,
-        city,
-        state,
-        zip,
-        country,
-        last_login,
-        created_date,
-        created_by,
-        updated_date,
-        updated_by
-    FROM users`;
+  SELECT 
+    username,
+    email,
+    first_name,
+    last_name,
+    date_of_birth,
+    phone_number,
+    address,
+    city,
+    state,
+    zip,
+    country,
+    last_login,
+    created_date,
+    created_by,
+    updated_date,
+    updated_by
+  FROM users`;
 
 exports.GET_USER_BY_ID = `
   SELECT 
