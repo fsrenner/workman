@@ -1,4 +1,3 @@
-const sinon = require('sinon');
 const db = require('../../db');
 const { getUsers } = require('./helpers/usersHelpers');
 const { users } = require('../../service');

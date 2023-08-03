@@ -33,11 +33,11 @@ const localStrategy = async (username, password, done) => {
     const user = rows[0];
     if (!user) {
       message = `There is no user found with the username: ${username}`;
-      logger.info(message);
+      logger.warn(message);
       return done(null, false, { message });
     }
     const isValidPassword = await bcrypt.compare(password, user.password_hash);
-    logger.info(`isValidPassword: ${isValidPassword}`);
+    logger.debug(`isValidPassword: ${isValidPassword}`);
     if (!isValidPassword) {
       message = `The password entered is incorrect for user with username: ${username}`;
       logger.info(message);
