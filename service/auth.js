@@ -20,6 +20,19 @@ const handleAuthenticatedUser = async (req, res, error, user, info) => {
   return res.json({ user });
 };
 
+const handleLogout = (userId, error, res, next) => {
+  if (error) {
+    logger.error(error);
+    return next();
+  }
+  logger.info(
+    `The following user has logged out of Workman: ${JSON.stringify(userId)}`
+  );
+  return res.json({
+    message: 'You have successfully logged out of the application',
+  });
+};
+
 const login = (req, res, next) =>
   passport.authenticate(['local'], (error, user, info) =>
     handleAuthenticatedUser(req, res, error, user, info)
@@ -30,23 +43,12 @@ const unauthorized = (req, res) =>
     message: 'You are not authorized to access this application',
   });
 
-const logout = (req, res, next) => {
-  const { userId } = req.session;
-  req.logout((error) => {
-    if (error) {
-      return next();
-    }
-    logger.info(
-      `The following user has logged out of Workman: ${JSON.stringify(userId)}`
-    );
-    return res.json({
-      message: 'You have successfully logged out of the application',
-    });
-  });
-};
+const logout = (req, res, next) =>
+  req.logout((error) => handleLogout(req.session.userId, error, res, next));
 
 module.exports = {
   handleAuthenticatedUser,
+  handleLogout,
   login,
   unauthorized,
   logout,
