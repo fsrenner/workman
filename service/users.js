@@ -8,6 +8,7 @@ const {
   CREATE_USER,
   DELETE_USER,
 } = require('../queries/users');
+const { CREATE_USERS_ROLES } = require('../queries/users_roles');
 const {
   createHashedPassword,
   isEmailUnique,
@@ -49,7 +50,7 @@ const getUsers = async (req, res) => {
     offset,
   } = req.query;
   if (id) {
-    params.push(id);
+    params.push(Number(id));
     filtering.push(`${userTableFields.id} = $${fieldIncrementer}`);
     fieldIncrementer++;
   }
@@ -99,7 +100,7 @@ const getUsers = async (req, res) => {
     fieldIncrementer++;
   }
   if (zip) {
-    params.push(zip);
+    params.push(Number(zip));
     filtering.push(`${userTableFields.zip} = $${fieldIncrementer}`);
     fieldIncrementer++;
   }
@@ -114,7 +115,7 @@ const getUsers = async (req, res) => {
     fieldIncrementer++;
   }
   if (createdBy) {
-    params.push(createdBy);
+    params.push(Number(createdBy));
     filtering.push(`${userTableFields.createdBy} = $${fieldIncrementer}`);
     fieldIncrementer++;
   }
@@ -124,7 +125,7 @@ const getUsers = async (req, res) => {
     fieldIncrementer++;
   }
   if (updatedBy) {
-    params.push(updatedBy);
+    params.push(Number(updatedBy));
     filtering.push(`${userTableFields.updatedBy} = $${fieldIncrementer}`);
     fieldIncrementer++;
   }
@@ -253,6 +254,7 @@ const createUser = async (req, res) => {
 
   const { rows } = await db.query(CREATE_USER, sqlParams);
   const createdUser = rows[0];
+  await db.query(CREATE_USERS_ROLES, [userId, 4, userId]);
   logger.info(`Created user: ${JSON.stringify(createdUser)}`);
   await sendVerificationEmail(req.body, createdUser.user_id);
   return res.json({ users: createdUser });

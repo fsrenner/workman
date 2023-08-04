@@ -2,8 +2,6 @@ const logger = require('../logger');
 const usersService = require('../service').users;
 
 const getUsers = async (req, res) => {
-  logger.debug(req.user);
-  logger.debug(req.session);
   try {
     return await usersService.getUsers(req, res);
   } catch (e) {
