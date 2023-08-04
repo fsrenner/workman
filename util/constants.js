@@ -28,3 +28,13 @@ exports.usersRolesTableFields = {
   updatedDate: 'updated_date',
   updatedBy: 'updated_by',
 };
+
+exports.usersRolesTableInsertValues = [
+  '($1, $2, now(), $3, null, null)',
+  '($4, $5, now(), $6, null, null)',
+  '($7, $8, now(), $9, null, null)',
+  '($10, $11, now(), $12, null, null)',
+  '($13, $14, now(), $15, null, null)',
+  '($16, $17, now(), $18, null, null)',
+  '($19, $20, now(), $21, null, null)',
+];

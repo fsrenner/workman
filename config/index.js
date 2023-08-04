@@ -9,6 +9,7 @@ module.exports = {
     port: process.env.DB_PORT || 5432,
   },
   logger: {
+    enabled: !(process.env.LOG_ENABLED === 'false'),
     level: process.env.LOG_LEVEL || 'debug',
     transport:
       process.env.USE_TRANSPORT === 'true'

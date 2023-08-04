@@ -1,5 +1,6 @@
 const logging = require('./logging');
 const permissions = require('./permissions');
+const user = require('./user');
 
 const notFound = (req, res, next) => {
   const error = new Error('Not found');
@@ -18,4 +19,5 @@ module.exports = {
   serverError,
   logging,
   permissions,
+  user,
 };

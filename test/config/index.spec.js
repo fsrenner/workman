@@ -15,6 +15,7 @@ describe('Config Tests', () => {
         },
         logger: {
           level: 'trace',
+          enabled: false,
           transport: {
             target: 'pino-pretty',
             options: {

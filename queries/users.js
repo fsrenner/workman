@@ -1,6 +1,7 @@
 // User Queries
 exports.GET_USERS = `
   SELECT 
+    user_id,
     username,
     email,
     first_name,
@@ -21,6 +22,7 @@ exports.GET_USERS = `
 
 exports.GET_USER_BY_ID = `
   SELECT 
+    user_id,
     username,
     email,
     first_name,
