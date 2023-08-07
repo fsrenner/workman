@@ -8,6 +8,8 @@ const {
   permissions: { canUpdate },
   user: { doesUserExist },
 } = require('../middleware');
+const validators = require('../middleware/validators');
+const { canRead, canAdminister } = require('../middleware/permissions');
 
 const {
   statusController,
@@ -15,7 +17,6 @@ const {
   usersController,
   usersRolesController,
 } = require('../controllers');
-const { canRead, canAdminister } = require('../middleware/permissions');
 
 router.use('/', logApiTransaction);
 
@@ -24,63 +25,83 @@ router.get('/status', statusController.sendStatus);
 router.get('/status/:hello', statusController.sayHello);
 
 // Auth Controllers
-router.post('/login', passport.authenticate('local'), authController.login);
+router.post(
+  '/login',
+  [validators.login, passport.authenticate('local')],
+  authController.login
+);
 router.get('/unauthorized', authController.unauthorized);
 router.post('/logout', isAuthenticated, authController.logout);
 
 // Users Controllers
-router.get('/users', isAuthenticated, usersController.getUsers);
-router.get('/users/:userId', isAuthenticated, usersController.getUserById);
-router.post('/users', usersController.createUser);
-router.post('/users/verify/:userId', usersController.verifyUser);
+router.get(
+  '/users',
+  [isAuthenticated, validators.getUsers],
+  usersController.getUsers
+);
+router.get(
+  '/users/:userId',
+  [isAuthenticated, validators.getUserById],
+  usersController.getUserById
+);
+router.post('/users', validators.createUser, usersController.createUser);
+router.post(
+  '/users/verify/:userId',
+  validators.verifyUser,
+  usersController.verifyUser
+);
 router.put(
   '/users/:userId',
-  [isAuthenticated, canUpdate],
+  [isAuthenticated, validators.updateUser, canUpdate],
   usersController.updateUser
 );
 router.delete(
   '/users/:userId',
-  [isAuthenticated, canUpdate, doesUserExist],
+  [isAuthenticated, validators.deleteUser, canUpdate, doesUserExist],
   usersController.deleteUser
 );
 
 // Users Roles Controllers
 router.get(
   '/usersroles',
-  [isAuthenticated, canRead],
+  [isAuthenticated, validators.getUsersRoles, canRead],
   usersRolesController.getUsersRoles
 );
 
 router.get(
   '/usersroles/:id',
-  [isAuthenticated, canRead],
+  [isAuthenticated, validators.getUsersRolesById, canRead],
   usersRolesController.getUsersRolesById
 );
 
 router.get(
   '/usersroles/user/:userId',
-  [isAuthenticated, canRead],
+  [isAuthenticated, validators.getUsersRolesByUserId, canRead],
   usersRolesController.getUsersRolesByUserId
 );
 
 router.post(
   '/usersroles',
-  [isAuthenticated, canAdminister, doesUserExist],
+  [isAuthenticated, validators.createUsersRoles, canAdminister, doesUserExist],
   usersRolesController.createUsersRoles
 );
 router.delete(
   '/usersroles/:id',
-  [isAuthenticated, canAdminister],
+  [isAuthenticated, validators.deleteUsersRolesById, canAdminister],
   usersRolesController.deleteUsersRolesById
 );
 router.delete(
   '/usersroles/user/:userId',
-  [isAuthenticated, canAdminister],
+  [isAuthenticated, validators.deleteUsersRolesByUserId, canAdminister],
   usersRolesController.deleteUsersRolesByUserId
 );
 router.delete(
   '/usersroles/user/:userId/role/:roleId',
-  [isAuthenticated, canAdminister],
+  [
+    isAuthenticated,
+    validators.deleteUsersRolesByUserIdAndRoleId,
+    canAdminister,
+  ],
   usersRolesController.deleteUsersRolesByUserIdAndRoleId
 );
 

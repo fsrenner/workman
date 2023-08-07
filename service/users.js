@@ -183,7 +183,7 @@ const getUsers = async (req, res) => {
 };
 
 const getUserById = async (req, res) => {
-  const userId = Number(req.params.userId);
+  const { userId } = req.params;
   const { rows } = await db.query(GET_USER_BY_ID, [userId]);
   return res.json({ users: rows[0] });
 };
@@ -262,11 +262,6 @@ const createUser = async (req, res) => {
 
 const verifyUser = async (req, res) => {
   const { userId } = req.params;
-  if (!userId) {
-    return res.status(400).json({
-      message: 'The user id was missing from the request',
-    });
-  }
   await db.query(VERIFY_USER, [userId]);
   const message = `User : ${userId} email verfication was successful`;
   logger.info(message);
