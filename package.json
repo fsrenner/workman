@@ -10,7 +10,8 @@
     "start": "node ./index.js",
     "lint": "eslint \"./**/*.js\" --quiet",
     "lintFull": "eslint \"./**/*.js\"",
-    "lintFix": "eslint --fix './**/*.js'"
+    "lintFix": "eslint --fix './**/*.js'",
+    "prepare": "husky install"
   },
   "keywords": [],
   "author": "",
@@ -32,12 +33,6 @@
     "pg": "^8.11.1",
     "pino": "^8.14.1",
     "pino-pretty": "^10.1.0"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "npm lint",
-      "pre-push": "npm test"
-    }
   },
   "devDependencies": {
     "@babel/preset-env": "^7.22.9",
