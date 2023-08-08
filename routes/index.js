@@ -16,6 +16,7 @@ const {
   authController,
   usersController,
   usersRolesController,
+  churchesController,
 } = require('../controllers');
 
 router.use('/', logApiTransaction);
@@ -104,6 +105,10 @@ router.delete(
   ],
   usersRolesController.deleteUsersRolesByUserIdAndRoleId
 );
+
+// Churches Controllers
+router.get('/churches', [isAuthenticated], churchesController.getChurches);
+router.get('/churches/:id', [], churchesController.getChurchById);
 
 router.use(notFound);
 router.use(serverError);

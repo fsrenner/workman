@@ -40,3 +40,21 @@ exports.usersRolesTableInsertValues = [
   '($16, $17, now(), $18, null, null)',
   '($19, $20, now(), $21, null, null)',
 ];
+
+exports.churchesTableFields = {
+  id: 'church_id',
+  name: 'church_name',
+  denomination: 'denomination',
+  description: 'description',
+  email: 'email',
+  phone: 'phone_number',
+  address: 'address',
+  city: 'city',
+  state: 'state',
+  zip: 'zip',
+  country: 'country',
+  createdDate: 'created_date',
+  createdBy: 'created_by',
+  updatedDate: 'updated_date',
+  updatedBy: 'updated_by',
+};
