@@ -77,7 +77,7 @@ const filterQuery = (query, statement) => {
   if (sort) {
     const splitSort = sort.trim().split(' ');
     const orderParam = splitSort[0].trim();
-    let direction = splitSort[1].trim();
+    let direction = splitSort[1].trim().toLowerCase();
     if (!direction || direction === DESC) {
       direction = DESC;
     } else if (direction === ASC) {
@@ -170,7 +170,7 @@ const deleteUsersRolesById = async (req, res) => {
   const message = `Users Role: ${id} was successfully deleted from users roles`;
   logger.info(message);
   return res.json({
-    users: message,
+    usersRoles: message,
   });
 };
 
@@ -180,7 +180,7 @@ const deleteUsersRolesByUserId = async (req, res) => {
   const message = `User: ${userId} was successfully deleted from users roles`;
   logger.info(message);
   return res.json({
-    users: message,
+    usersRoles: message,
   });
 };
 
@@ -190,7 +190,7 @@ const deleteUsersRolesByUserIdAndRoleId = async (req, res) => {
   const message = `User: ${userId} with Role: ${roleId} was successfully deleted from users roles`;
   logger.info(message);
   return res.json({
-    users: message,
+    usersRoles: message,
   });
 };
 

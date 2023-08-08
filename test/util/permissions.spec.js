@@ -42,6 +42,10 @@ describe('Util Permissions Tests', () => {
       expect(isAdmin([])).toBeFalsy();
       done();
     });
+    it('Should handle missing roles', (done) => {
+      expect(isAdmin(null)).toBeFalsy();
+      done();
+    });
   });
   describe('Testing isWriter', () => {
     it('Should return writer is true', (done) => {
@@ -52,6 +56,10 @@ describe('Util Permissions Tests', () => {
       expect(isWriter([])).toBeFalsy();
       done();
     });
+    it('Should handle missing roles', (done) => {
+      expect(isWriter(null)).toBeFalsy();
+      done();
+    });
   });
   describe('Testing isReader', () => {
     it('Should return reader is true', (done) => {
@@ -60,6 +68,10 @@ describe('Util Permissions Tests', () => {
     });
     it('Should return reader is true', (done) => {
       expect(isReader([])).toBeFalsy();
+      done();
+    });
+    it('Should handle missing roles', (done) => {
+      expect(isReader(null)).toBeFalsy();
       done();
     });
   });
