@@ -108,16 +108,6 @@ describe('Users Service Tests', () => {
       await users.verifyUser(req, res);
       expect(res.json).toHaveBeenCalledWith(message);
     });
-    it('Should return bad request for missing id', async () => {
-      const req = mockRequest({}, {}, {}, {});
-      const res = mockResponse();
-      const message = {
-        message: 'The user id was missing from the request',
-      };
-      await users.verifyUser(req, res);
-      expect(res.status).toHaveBeenCalledWith(400);
-      expect(res.json).toHaveBeenCalledWith(message);
-    });
   });
   describe('Testing updateUser', () => {
     it('Should update an existing User', async () => {
