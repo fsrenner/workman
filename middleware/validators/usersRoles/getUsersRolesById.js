@@ -1,7 +1,7 @@
 const Joi = require('joi');
 
 const schema = Joi.object().keys({
-  id: Joi.number(),
+  id: Joi.number().required(),
 });
 
 module.exports = async (req, res, next) => {
