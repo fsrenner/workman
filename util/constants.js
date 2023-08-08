@@ -1,3 +1,5 @@
+exports.alphaNumSpaceDash = /^[a-zA-Z0-9 -]+$/;
+
 exports.userTableFields = {
   id: 'user_id',
   username: 'username',
