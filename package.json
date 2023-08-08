@@ -10,7 +10,8 @@
     "start": "node ./index.js",
     "lint": "eslint \"./**/*.js\" --quiet",
     "lintFull": "eslint \"./**/*.js\"",
-    "lintFix": "eslint --fix './**/*.js'"
+    "lintFix": "eslint --fix './**/*.js'",
+    "prepare": "husky install"
   },
   "keywords": [],
   "author": "",
