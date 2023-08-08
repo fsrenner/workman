@@ -71,9 +71,11 @@ describe('Auth Service Tests', () => {
       );
       const res = mockResponse();
       const next = jest.fn();
-      passport.authenticate = jest.fn(
-        (authType, options, callback) => () => ({})
-      );
+      passport.authenticate = jest.fn((authType, options, callback) => () => ({
+        authType,
+        options,
+        callback,
+      }));
       await auth.login(req, res, next);
       expect(passport.authenticate).toHaveBeenCalled();
     });

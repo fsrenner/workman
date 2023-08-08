@@ -1,4 +1,3 @@
-const { Pool } = require('pg');
 const { query, getPool } = require('../../db');
 
 describe('Database Module Tests', () => {
