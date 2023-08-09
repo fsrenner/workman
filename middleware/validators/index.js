@@ -18,6 +18,13 @@ const deleteUsersRolesById = require('./usersRoles/deleteUsersRolesById');
 const deleteUsersRolesByUserId = require('./usersRoles/deleteUsersRolesByUserId');
 const deleteUsersRolesByUserIdAndRoleId = require('./usersRoles/deleteUsersRolesByUserIdAndRoleId');
 
+// Church Validators
+const getChurches = require('./churches/getChurches');
+const getChurchById = require('./churches/getChurchById');
+const createChurch = require('./churches/createChurch');
+const updateChurch = require('./churches/updateChurch');
+const deleteChurch = require('./churches/deleteChurch');
+
 module.exports = {
   login,
   getUsers,
@@ -33,4 +40,9 @@ module.exports = {
   deleteUsersRolesById,
   deleteUsersRolesByUserId,
   deleteUsersRolesByUserIdAndRoleId,
+  getChurches,
+  getChurchById,
+  createChurch,
+  updateChurch,
+  deleteChurch,
 };

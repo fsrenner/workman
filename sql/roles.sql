@@ -48,3 +48,17 @@ insert into roles (
     null,
     null
 );
+
+insert into roles (
+    user_role,
+    created_date,
+    created_by,
+    updated_date,
+    updated_by
+) values (
+    'general_user',
+    now(),
+    1,
+    null,
+    null
+);

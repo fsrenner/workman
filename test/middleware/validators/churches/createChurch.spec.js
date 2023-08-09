@@ -1,4 +1,4 @@
-const updateUserValidator = require('../../../../middleware/validators/users/updateUser');
+const createChurchValidator = require('../../../../middleware/validators/churches/createChurch');
 
 const mockRequest = (query, params, body, session) => ({
   query,
@@ -15,19 +15,17 @@ const mockResponse = () => {
 
 const next = jest.fn();
 
-describe('Update User Validator Test', () => {
-  describe('Testing the updateUser Validator', () => {
-    it('Should verify the schema of the updateUser request', async () => {
+describe('Verify Church Validator Test', () => {
+  describe('Testing the createChurch Validator', () => {
+    it('Should verify the schema of the createChurch request', async () => {
       const req = mockRequest(
         {},
-        { userId: 1 },
+        {},
         {
-          username: 'test',
+          name: 'test',
           email: 'test@test.com',
-          password: 'test',
-          firstName: 'test',
-          lastName: 'test',
-          dob: '12/13/2023',
+          denomination: 'test',
+          description: 'test',
           phone: 9876543210,
           address: '123 test st',
           city: 'test',
@@ -37,13 +35,13 @@ describe('Update User Validator Test', () => {
         {}
       );
       const res = mockResponse();
-      updateUserValidator(req, res, next);
+      await createChurchValidator(req, res, next);
       expect(next).toHaveBeenCalled();
     });
-    it('Should verify the schema of the updateUser request', async () => {
+    it('Should verify the schema of the createChurch request', async () => {
       const req = mockRequest({ test: 'test' }, {}, {}, {});
       const res = mockResponse();
-      updateUserValidator(req, res, next);
+      await createChurchValidator(req, res, next);
       expect(res.status).toHaveBeenCalledWith(400);
     });
   });

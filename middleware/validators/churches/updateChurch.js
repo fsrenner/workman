@@ -2,22 +2,19 @@ const Joi = require('joi');
 const { alphaNumSpaceDash } = require('../../../util/constants');
 
 const bodySchema = Joi.object().keys({
-  username: Joi.string().alphanum().min(3).max(30),
-  password: Joi.string().min(3).max(30),
+  name: Joi.string().alphanum().min(3).max(30),
+  denomination: Joi.string().min(3).max(30),
+  description: Joi.string().min(3).max(1000),
   email: Joi.string().email(),
-  firstName: Joi.string().alphanum().min(3).max(30),
-  lastName: Joi.string().alphanum().min(3).max(30),
-  dob: Joi.date(),
-  phone: Joi.number().max(19999999999),
+  phone: Joi.number().max(9999999999),
   address: Joi.string().pattern(alphaNumSpaceDash).min(3).max(50),
   city: Joi.string().pattern(alphaNumSpaceDash).min(3).max(30),
   state: Joi.string().uppercase().length(2),
   zip: Joi.number().max(99999),
-  verified: Joi.boolean(),
 });
 
 const paramsSchema = Joi.object().keys({
-  userId: Joi.number().required(),
+  id: Joi.number().required(),
 });
 
 module.exports = async (req, res, next) => {

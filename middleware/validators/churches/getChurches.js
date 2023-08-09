@@ -2,12 +2,10 @@ const Joi = require('joi');
 
 const schema = Joi.object().keys({
   id: Joi.number(),
-  username: Joi.string().alphanum().min(3).max(30),
-  password: Joi.string().min(3).max(30),
+  name: Joi.string().alphanum().min(3).max(30),
+  denomination: Joi.string().min(3).max(30),
+  description: Joi.string().min(3).max(1000),
   email: Joi.string().email(),
-  firstName: Joi.string().alphanum().min(3).max(30),
-  lastName: Joi.string().alphanum().min(3).max(30),
-  dob: Joi.date(),
   phone: Joi.number().max(19999999999),
   address: Joi.string().alphanum().min(3).max(50),
   city: Joi.string().alphanum().min(3).max(30),
