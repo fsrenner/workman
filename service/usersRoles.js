@@ -129,7 +129,7 @@ const getUsersRoles = async (req, res) => {
 const getUsersRolesById = async (req, res) => {
   const { id } = req.params;
   const results = await db.query(GET_USERS_ROLES_BY_ID, [id]);
-  return res.json({ usersRoles: results.rows });
+  return res.json({ usersRoles: results.rows[0] });
 };
 
 const getUsersRolesByUserId = async (req, res) => {

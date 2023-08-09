@@ -25,7 +25,43 @@ const getChurchById = async (req, res) => {
   }
 };
 
+const createChurch = async (req, res) => {
+  try {
+    return await churchesService.createChurch(req, res);
+  } catch (e) {
+    logger.error(
+      `There was a problem creating the church. Error: ${JSON.stringify(e)}`
+    );
+    return res.status(500).json({ e });
+  }
+};
+
+const updateChurch = async (req, res) => {
+  try {
+    return await churchesService.updateChurch(req, res);
+  } catch (e) {
+    logger.error(
+      `There was a problem updating the church. Error: ${JSON.stringify(e)}`
+    );
+    return res.status(500).json({ e });
+  }
+};
+
+const deleteChurch = async (req, res) => {
+  try {
+    return await churchesService.deleteChurch(req, res);
+  } catch (e) {
+    logger.error(
+      `There was a problem deleting the church. Error: ${JSON.stringify(e)}`
+    );
+    return res.status(500).json({ e });
+  }
+};
+
 module.exports = {
   getChurches,
   getChurchById,
+  createChurch,
+  updateChurch,
+  deleteChurch,
 };

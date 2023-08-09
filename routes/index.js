@@ -4,12 +4,17 @@ const { isAuthenticated } = require('../config/passport');
 const {
   notFound,
   serverError,
+  validators,
   logging: { logApiTransaction },
-  permissions: { canUpdate },
+  permissions: {
+    canAdminister,
+    canRead,
+    canUpdate,
+    canUpdateUser,
+    canReadUser,
+  },
   user: { doesUserExist },
 } = require('../middleware');
-const validators = require('../middleware/validators');
-const { canRead, canAdminister } = require('../middleware/permissions');
 
 const {
   statusController,
@@ -37,15 +42,19 @@ router.post('/logout', isAuthenticated, authController.logout);
 // Users Controllers
 router.get(
   '/users',
-  [isAuthenticated, validators.getUsers],
+  [isAuthenticated, canReadUser, validators.getUsers],
   usersController.getUsers
 );
 router.get(
   '/users/:userId',
-  [isAuthenticated, validators.getUserById],
+  [isAuthenticated, canReadUser, validators.getUserById],
   usersController.getUserById
 );
-router.post('/users', validators.createUser, usersController.createUser);
+router.post(
+  '/users',
+  [isAuthenticated, canUpdateUser, validators.createUser],
+  usersController.createUser
+);
 router.post(
   '/users/verify/:userId',
   validators.verifyUser,
@@ -53,62 +62,85 @@ router.post(
 );
 router.put(
   '/users/:userId',
-  [isAuthenticated, validators.updateUser, canUpdate],
+  [isAuthenticated, canUpdateUser, validators.updateUser],
   usersController.updateUser
 );
 router.delete(
   '/users/:userId',
-  [isAuthenticated, validators.deleteUser, canUpdate, doesUserExist],
+  [isAuthenticated, canUpdateUser, validators.deleteUser, doesUserExist],
   usersController.deleteUser
 );
 
 // Users Roles Controllers
 router.get(
   '/usersroles',
-  [isAuthenticated, validators.getUsersRoles, canRead],
+  [isAuthenticated, canRead, validators.getUsersRoles],
   usersRolesController.getUsersRoles
 );
 
 router.get(
   '/usersroles/:id',
-  [isAuthenticated, validators.getUsersRolesById, canRead],
+  [isAuthenticated, canRead, validators.getUsersRolesById],
   usersRolesController.getUsersRolesById
 );
 
 router.get(
   '/usersroles/user/:userId',
-  [isAuthenticated, validators.getUsersRolesByUserId, canRead],
+  [isAuthenticated, canRead, validators.getUsersRolesByUserId],
   usersRolesController.getUsersRolesByUserId
 );
 
 router.post(
   '/usersroles',
-  [isAuthenticated, validators.createUsersRoles, canAdminister, doesUserExist],
+  [isAuthenticated, canAdminister, validators.createUsersRoles, doesUserExist],
   usersRolesController.createUsersRoles
 );
 router.delete(
   '/usersroles/:id',
-  [isAuthenticated, validators.deleteUsersRolesById, canAdminister],
+  [isAuthenticated, canAdminister, validators.deleteUsersRolesById],
   usersRolesController.deleteUsersRolesById
 );
 router.delete(
   '/usersroles/user/:userId',
-  [isAuthenticated, validators.deleteUsersRolesByUserId, canAdminister],
+  [isAuthenticated, canAdminister, validators.deleteUsersRolesByUserId],
   usersRolesController.deleteUsersRolesByUserId
 );
 router.delete(
   '/usersroles/user/:userId/role/:roleId',
   [
     isAuthenticated,
-    validators.deleteUsersRolesByUserIdAndRoleId,
     canAdminister,
+    validators.deleteUsersRolesByUserIdAndRoleId,
   ],
   usersRolesController.deleteUsersRolesByUserIdAndRoleId
 );
 
 // Churches Controllers
-router.get('/churches', [isAuthenticated], churchesController.getChurches);
-router.get('/churches/:id', [], churchesController.getChurchById);
+router.get(
+  '/churches',
+  [isAuthenticated, validators.getChurches],
+  churchesController.getChurches
+);
+router.get(
+  '/churches/:id',
+  [isAuthenticated, validators.getChurchById],
+  churchesController.getChurchById
+);
+router.post(
+  '/churches',
+  [isAuthenticated, validators.createChurch],
+  churchesController.createChurch
+);
+router.put(
+  '/churches/:id',
+  [isAuthenticated, canUpdate, validators.updateChurch],
+  churchesController.updateChurch
+);
+router.delete(
+  '/churches/:id',
+  [isAuthenticated, canUpdate, validators.deleteChurch],
+  churchesController.deleteChurch
+);
 
 router.use(notFound);
 router.use(serverError);

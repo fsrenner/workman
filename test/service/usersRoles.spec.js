@@ -66,7 +66,7 @@ describe('Users Roles Service Tests', () => {
       );
       jest.spyOn(db, 'query').mockReturnValue({ rows: mockResult });
       const getUsersRolesResult = {
-        usersRoles: mockResult,
+        usersRoles: mockResult[0],
       };
       await usersRoles.getUsersRolesById(req, res);
       expect(res.json).toHaveBeenCalledWith(getUsersRolesResult);

@@ -229,7 +229,7 @@ const createUser = async (req, res) => {
     nonNullFields.push('lastName');
   }
 
-  if (nonNullFields.lenth > 0) {
+  if (nonNullFields.length > 0) {
     return res.status(400).json({
       message: `The following fields are required to create a user: ${nonNullFields.toString}`,
     });
