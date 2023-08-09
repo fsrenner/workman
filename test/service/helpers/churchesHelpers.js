@@ -10,7 +10,7 @@ exports.getChurches = {
       address: 'test',
       city: 'test',
       state: 'NY',
-      country: 'USA',
+      zip: 12345,
       created_date: '2023-08-09T18:20:41.871Z',
       created_by: 1,
       updated_date: null,

@@ -29,7 +29,6 @@ const filterQuery = (query, statement) => {
     city,
     state,
     zip,
-    country,
     createdBy,
     createdDate,
     updatedDate,
@@ -89,11 +88,6 @@ const filterQuery = (query, statement) => {
   if (zip) {
     params.push(Number(zip));
     filtering.push(`${churchesTableFields.zip} = $${fieldIncrementer}`);
-    fieldIncrementer++;
-  }
-  if (country) {
-    params.push(Number(country));
-    filtering.push(`${churchesTableFields.country} = $${fieldIncrementer}`);
     fieldIncrementer++;
   }
 
@@ -186,7 +180,7 @@ const createChurch = async (req, res) => {
     address,
     city,
     state,
-    country,
+    zip,
   } = req.body;
   if (!name) {
     return res.status(400).json({
@@ -202,7 +196,7 @@ const createChurch = async (req, res) => {
     address,
     city,
     state,
-    country,
+    zip,
     userId,
   ];
   const { rows } = await db.query(CREATE_CHURCH, sqlParams);
@@ -226,7 +220,7 @@ const updateChurch = async (req, res) => {
     address,
     city,
     state,
-    country,
+    zip,
   } = req.body;
   if (name) {
     updateFields.push(name);
@@ -269,9 +263,9 @@ const updateChurch = async (req, res) => {
     updateParams.push(`state = $${fieldIncrementer}`);
     fieldIncrementer++;
   }
-  if (country) {
-    updateFields.push(country);
-    updateParams.push(`country = $${fieldIncrementer}`);
+  if (zip) {
+    updateFields.push(zip);
+    updateParams.push(`zip = $${fieldIncrementer}`);
     fieldIncrementer++;
   }
   updateParams.push(`updated_date = now()`);

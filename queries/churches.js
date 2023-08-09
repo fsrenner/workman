@@ -10,7 +10,7 @@ exports.CREATE_CHURCH = `
     address,
     city,
     state,
-    country,
+    zip,
     created_date,
     created_by,
     updated_date,

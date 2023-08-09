@@ -13,7 +13,6 @@ const bodySchema = Joi.object().keys({
   city: Joi.string().pattern(alphaNumSpaceDash).min(3).max(30),
   state: Joi.string().uppercase().length(2),
   zip: Joi.number().max(99999),
-  country: Joi.string().alphanum().min(3).max(30),
   verified: Joi.boolean(),
 });
 

@@ -38,7 +38,6 @@ const getUsers = async (req, res) => {
     city,
     state,
     zip,
-    country,
     lastLogin,
     createdDate,
     createdBy,
@@ -102,11 +101,6 @@ const getUsers = async (req, res) => {
   if (zip) {
     params.push(Number(zip));
     filtering.push(`${userTableFields.zip} = $${fieldIncrementer}`);
-    fieldIncrementer++;
-  }
-  if (country) {
-    params.push(country);
-    filtering.push(`${userTableFields.country} = $${fieldIncrementer}`);
     fieldIncrementer++;
   }
   if (lastLogin) {
@@ -203,7 +197,6 @@ const createUser = async (req, res) => {
     city,
     state,
     zip,
-    country,
   } = req.body;
 
   if (!isEmailUnique(email)) {
@@ -248,7 +241,6 @@ const createUser = async (req, res) => {
     city,
     state,
     Number(zip),
-    country,
     userId || 0,
   ];
 
@@ -286,7 +278,6 @@ const updateUser = async (req, res) => {
     city,
     state,
     zip,
-    country,
     verified,
   } = req.body;
   const { userId } = req.params;
@@ -345,11 +336,6 @@ const updateUser = async (req, res) => {
   if (zip) {
     updateFields.push(Number(zip));
     updateParams.push(`zip = $${fieldIncrementer}`);
-    fieldIncrementer++;
-  }
-  if (country) {
-    updateFields.push(country);
-    updateParams.push(`country = $${fieldIncrementer}`);
     fieldIncrementer++;
   }
   if (verified) {

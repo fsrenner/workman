@@ -33,7 +33,6 @@ describe('Update User Validator Test', () => {
           city: 'test',
           state: 'MO',
           zip: 77777,
-          country: 'test',
         },
         {}
       );

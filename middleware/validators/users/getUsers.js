@@ -13,7 +13,6 @@ const schema = Joi.object().keys({
   city: Joi.string().alphanum().min(3).max(30),
   state: Joi.string().uppercase().length(2),
   zip: Joi.number().max(99999),
-  country: Joi.string().alphanum().min(3).max(30),
   createdDate: Joi.date(),
   createdBy: Joi.date(),
   updatedDate: Joi.date(),

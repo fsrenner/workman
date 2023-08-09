@@ -40,7 +40,6 @@ describe('Users Service Tests', () => {
         city: 'Normal',
         state: 'IL',
         zip: 60010,
-        country: 'USA',
         lastLogin: '2023-07-31 15:40:00.198068',
         createdDate: '2023-07-31 15:40:00.198068',
         createdBy: 1,
@@ -123,7 +122,6 @@ describe('Users Service Tests', () => {
         city: 'test',
         state: 'test',
         zip: 60010,
-        country: 'USA',
         verified: true,
       };
       const req = mockRequest({}, { userId: 1 }, bodyParams, {
