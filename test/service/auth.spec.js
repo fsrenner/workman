@@ -29,11 +29,13 @@ describe('Auth Service Tests', () => {
       );
       const res = mockResponse();
       const error = null;
+      const roles = [1, 2, 3];
       const user = {
         user_id: 1,
+        roles,
       };
       const info = {};
-      jest.spyOn(util, 'getUserRoles').mockReturnValue([1, 2, 3]);
+      jest.spyOn(util, 'getUserRoles').mockReturnValue(roles);
       await auth.handleAuthenticatedUser(req, res, error, user, info);
       expect(res.json).toHaveBeenCalledWith({ user });
     });

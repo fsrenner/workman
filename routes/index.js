@@ -50,11 +50,7 @@ router.get(
   [isAuthenticated, canReadUser, validators.getUserById],
   usersController.getUserById
 );
-router.post(
-  '/users',
-  [isAuthenticated, canUpdateUser, validators.createUser],
-  usersController.createUser
-);
+router.post('/users', [validators.createUser], usersController.createUser);
 router.post(
   '/users/verify/:userId',
   validators.verifyUser,

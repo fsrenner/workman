@@ -15,10 +15,12 @@ const schema = Joi.object().keys({
   address: Joi.string().pattern(alphaNumSpaceDash).allow('', null),
   city: Joi.string().pattern(alphaNumSpaceDash).allow('', null),
   state: Joi.string().uppercase().length(2).allow('', null),
-  zip: Joi.alternatives().try(
-    Joi.number().max(99999),
-    Joi.string().pattern(zip).length(5).allow('', null)
-  ),
+  zip: Joi.alternatives()
+    .try(
+      Joi.number().max(99999),
+      Joi.string().pattern(zip).length(5).allow('', null)
+    )
+    .required(),
 });
 
 module.exports = async (req, res, next) => {
