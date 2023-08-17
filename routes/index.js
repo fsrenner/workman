@@ -142,6 +142,16 @@ router.delete(
   churchesController.deleteChurch
 );
 
+// Church Users Controllers
+router.get('/churchuser');
+router.get('/churchuser/:id');
+router.get('/churchuser/user/:userId');
+router.get('/churchuser/church/:churchId');
+router.post('/churchuser');
+router.delete('/churchuser/:id');
+router.delete('/churchuser/user/:userId');
+router.delete('/churchuser/church/:churchId');
+
 router.use(notFound);
 router.use(serverError);
 

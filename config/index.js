@@ -21,6 +21,13 @@ module.exports = {
           }
         : {},
   },
+  cors: {
+    origin: process.env.ORIGIN || 'http://localhost:5173',
+    // methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    // preflightContinue: false,
+    // optionsSuccessStatus: 204,
+    credentials: true,
+  },
   session: {
     secret: process.env.SECRET || 'secret',
     resave: true,

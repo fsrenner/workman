@@ -1,4 +1,6 @@
 exports.alphaNumSpaceDash = /^[a-zA-Z0-9 -]+$/;
+exports.phone = /^\d{10}$/;
+exports.zip = /^\d{10}$/;
 
 exports.userTableFields = {
   id: 'user_id',
