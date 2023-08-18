@@ -5,6 +5,7 @@ const session = require('express-session');
 const helmet = require('helmet');
 const cors = require('cors');
 const compression = require('compression');
+const cookieParser = require('cookie-parser');
 const passport = require('passport');
 
 const app = express();
@@ -18,7 +19,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(helmet());
 app.disable('x-powered-by');
-app.use(cors());
+app.use(cors(config.cors));
 app.use(compression());
 app.use(
   session({
@@ -28,12 +29,14 @@ app.use(
     cookie: config.session.cookie,
   })
 );
+app.use(cookieParser(config.session.secret));
 if (process.env.NODE_ENV && process.env.NODE_ENV === 'production') {
   app.set('trust proxy', 1);
   session.cookie.secure = true;
 }
 app.use(passport.initialize());
 app.use(passport.session());
+// app.options('*', cors());
 app.use('/', router);
 
 app.listen(PORT, (err) => {

@@ -10,7 +10,7 @@ CREATE TABLE IF NOT EXISTS users (
     address VARCHAR(200),
     city VARCHAR(50),
     state VARCHAR(50),
-    zip INTEGER,
+    zip INTEGER NOT NULL,
     verified BOOLEAN NOT NULL DEFAULT FALSE,
     last_login TIMESTAMP,
     created_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,

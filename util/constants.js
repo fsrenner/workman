@@ -1,4 +1,6 @@
 exports.alphaNumSpaceDash = /^[a-zA-Z0-9 -]+$/;
+exports.phone = /^\d{10}$/;
+exports.zip = /^\d{10}$/;
 
 exports.userTableFields = {
   id: 'user_id',
@@ -51,6 +53,16 @@ exports.churchesTableFields = {
   city: 'city',
   state: 'state',
   zip: 'zip',
+  createdDate: 'created_date',
+  createdBy: 'created_by',
+  updatedDate: 'updated_date',
+  updatedBy: 'updated_by',
+};
+
+exports.churchUsersTableFields = {
+  id: 'church_user_id',
+  userId: 'user_id',
+  churchId: 'church_id',
   createdDate: 'created_date',
   createdBy: 'created_by',
   updatedDate: 'updated_date',

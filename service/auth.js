@@ -11,6 +11,8 @@ const handleAuthenticatedUser = async (req, res, error, user, info) => {
   }
   const userId = user.user_id;
   const roles = await util.getUserRoles(Number(userId));
+  // eslint-disable-next-line no-param-reassign
+  user.roles = roles;
   req.session.userId = userId;
   req.session.roles = roles;
   logger.debug(req.session);

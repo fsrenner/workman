@@ -3,6 +3,7 @@ const authController = require('./auth');
 const usersController = require('./users');
 const usersRolesController = require('./usersRoles');
 const churchesController = require('./churches');
+const churchUsersController = require('./churchUsers');
 
 module.exports = {
   statusController,
@@ -10,4 +11,5 @@ module.exports = {
   usersController,
   usersRolesController,
   churchesController,
+  churchUsersController,
 };
