@@ -1,5 +1,5 @@
 CREATE TABLE IF NOT EXISTS church_users (
-    business_user_id SERIAL PRIMARY KEY,
+    church_users_id SERIAL PRIMARY KEY,
     church_id INTEGER REFERENCES churches(church_id) ON DELETE CASCADE,
     user_id INTEGER REFERENCES users(user_id) ON DELETE CASCADE,
     created_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,

@@ -1,4 +1,4 @@
-const createUsersRolesValidator = require('../../../../middleware/validators/usersRoles/createUsersRoles');
+const getChurchUsersValidator = require('../../../../middleware/validators/churchUsers/getChurchUsers');
 
 const mockRequest = (query, params, body, session) => ({
   query,
@@ -15,26 +15,29 @@ const mockResponse = () => {
 
 const next = jest.fn();
 
-describe('Create Users Roles Validator Test', () => {
-  describe('Testing the createUsersRoles Validator', () => {
-    it('Should verify the schema of the createUsersRoles request', async () => {
+describe('Get Church Users Validator Test', () => {
+  describe('Testing the getChurchUsers Validator', () => {
+    it('Should verify the schema of the getChurchUsers request', async () => {
       const req = mockRequest(
-        {},
-        {},
         {
+          id: 1,
           userId: 1,
-          roleId: [1],
+          churchId: 1,
+          limit: 20,
+          offset: 10,
         },
+        {},
+        {},
         {}
       );
       const res = mockResponse();
-      createUsersRolesValidator(req, res, next);
+      getChurchUsersValidator(req, res, next);
       expect(next).toHaveBeenCalled();
     });
-    it('Should verify the schema of the createUsersRoles request', async () => {
+    it('Should verify the schema of the getChurchUsers request', async () => {
       const req = mockRequest({ test: 'test' }, {}, {}, {});
       const res = mockResponse();
-      createUsersRolesValidator(req, res, next);
+      getChurchUsersValidator(req, res, next);
       expect(res.status).toHaveBeenCalledWith(400);
     });
   });

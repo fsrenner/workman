@@ -58,3 +58,13 @@ exports.churchesTableFields = {
   updatedDate: 'updated_date',
   updatedBy: 'updated_by',
 };
+
+exports.churchUsersTableFields = {
+  id: 'church_user_id',
+  userId: 'user_id',
+  churchId: 'church_id',
+  createdDate: 'created_date',
+  createdBy: 'created_by',
+  updatedDate: 'updated_date',
+  updatedBy: 'updated_by',
+};

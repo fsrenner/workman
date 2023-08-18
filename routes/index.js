@@ -22,6 +22,7 @@ const {
   usersController,
   usersRolesController,
   churchesController,
+  churchUsersController,
 } = require('../controllers');
 
 router.use('/', logApiTransaction);
@@ -139,14 +140,51 @@ router.delete(
 );
 
 // Church Users Controllers
-router.get('/churchuser');
-router.get('/churchuser/:id');
-router.get('/churchuser/user/:userId');
-router.get('/churchuser/church/:churchId');
-router.post('/churchuser');
-router.delete('/churchuser/:id');
-router.delete('/churchuser/user/:userId');
-router.delete('/churchuser/church/:churchId');
+router.get(
+  '/churchusers',
+  [isAuthenticated, canRead],
+  churchUsersController.getChurchUsers
+);
+router.get(
+  '/churchusers/:id',
+  [isAuthenticated, canRead],
+  churchUsersController.getChurchUsersById
+);
+router.get(
+  '/churchusers/user/:userId',
+  [isAuthenticated, canRead],
+  churchUsersController.getChurchUsersByUserId
+);
+router.get(
+  '/churchusers/church/:churchId',
+  [isAuthenticated, canRead],
+  churchUsersController.getChurchUsersByChurchId
+);
+router.post(
+  '/churchusers',
+  [isAuthenticated, canUpdateUser],
+  churchUsersController.createChurchUser
+);
+router.delete(
+  '/churchusers/:id',
+  [isAuthenticated, canUpdateUser],
+  churchUsersController.deleteChurchUsersById
+);
+router.delete(
+  '/churchusers/user/:userId',
+  [isAuthenticated, canUpdateUser],
+  churchUsersController.deleteChurchUsersByUserId
+);
+router.delete(
+  '/churchusers/church/:churchId',
+  [isAuthenticated, canUpdateUser],
+  churchUsersController.deleteChurchUsersByChurchId
+);
+router.delete(
+  '/churchusers/user/:userId/church/:churchId',
+  [isAuthenticated, canUpdateUser],
+  churchUsersController.deleteChurchUsersByUserIdAndChurchId
+);
 
 router.use(notFound);
 router.use(serverError);

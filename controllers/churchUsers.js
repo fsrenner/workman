@@ -1,5 +1,5 @@
 const logger = require('../logger');
-const churchUsersService = require('../service').usersRoles;
+const churchUsersService = require('../service').churchUsers;
 
 const getChurchUsers = async (req, res) => {
   try {
@@ -53,9 +53,9 @@ const getChurchUsersByChurchId = async (req, res) => {
   }
 };
 
-const createChurchUsers = async (req, res) => {
+const createChurchUser = async (req, res) => {
   try {
-    return await churchUsersService.createChurchUsers(req, res);
+    return await churchUsersService.createChurchUser(req, res);
   } catch (e) {
     logger.error(
       `There was a problem creating the church users. Error: ${JSON.stringify(
@@ -105,13 +105,30 @@ const deleteChurchUsersByChurchId = async (req, res) => {
   }
 };
 
+const deleteChurchUsersByUserIdAndChurchId = async (req, res) => {
+  try {
+    return await churchUsersService.deleteChurchUsersByUserIdAndChurchId(
+      req,
+      res
+    );
+  } catch (e) {
+    logger.error(
+      `There was a problem deleting the church users by church id and user id. Error: ${JSON.stringify(
+        e
+      )}`
+    );
+    return res.status(500).json({ e });
+  }
+};
+
 module.exports = {
   getChurchUsers,
   getChurchUsersById,
   getChurchUsersByUserId,
   getChurchUsersByChurchId,
-  createChurchUsers,
+  createChurchUser,
   deleteChurchUsersById,
   deleteChurchUsersByUserId,
   deleteChurchUsersByChurchId,
+  deleteChurchUsersByUserIdAndChurchId,
 };

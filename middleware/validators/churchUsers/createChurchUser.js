@@ -2,7 +2,7 @@ const Joi = require('joi');
 
 const schema = Joi.object().keys({
   userId: Joi.number().required(),
-  roleId: Joi.array().items(Joi.number()).required(),
+  churchId: Joi.number().required(),
 });
 
 module.exports = async (req, res, next) => {
