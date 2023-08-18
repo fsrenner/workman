@@ -68,3 +68,19 @@ exports.churchUsersTableFields = {
   updatedDate: 'updated_date',
   updatedBy: 'updated_by',
 };
+
+exports.businessesTableFields = {
+  id: 'business_id',
+  name: 'business_name',
+  description: 'description',
+  email: 'email',
+  phone: 'phone_number',
+  address: 'address',
+  city: 'city',
+  state: 'state',
+  zip: 'zip',
+  createdDate: 'created_date',
+  createdBy: 'created_by',
+  updatedDate: 'updated_date',
+  updatedBy: 'updated_by',
+};
