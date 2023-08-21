@@ -1,6 +1,6 @@
 const db = require('../db');
 const logger = require('../logger');
-const { businessTableFields } = require('../util/constants');
+const { businessesTableFields } = require('../util/constants');
 const {
   GET_BUSINESSES,
   GET_BUSINESSES_BY_ID,
@@ -21,7 +21,6 @@ const filterQuery = (query, statement) => {
   const {
     id,
     name,
-    denomination,
     description,
     email,
     phone,
@@ -39,76 +38,75 @@ const filterQuery = (query, statement) => {
   } = query;
   if (id) {
     params.push(Number(id));
-    filtering.push(`${businessTableFields.id} = $${fieldIncrementer}`);
+    filtering.push(`${businessesTableFields.id} = $${fieldIncrementer}`);
     fieldIncrementer++;
   }
   if (name) {
-    params.push(Number(name));
-    filtering.push(`${businessTableFields.name} = $${fieldIncrementer}`);
-    fieldIncrementer++;
-  }
-  if (denomination) {
-    params.push(Number(denomination));
-    filtering.push(
-      `${businessTableFields.denomination} = $${fieldIncrementer}`
-    );
+    params.push(name);
+    filtering.push(`${businessesTableFields.name} = $${fieldIncrementer}`);
     fieldIncrementer++;
   }
 
   if (description) {
-    params.push(Number(description));
-    filtering.push(`${businessTableFields.description} = $${fieldIncrementer}`);
+    params.push(description);
+    filtering.push(
+      `${businessesTableFields.description} = $${fieldIncrementer}`
+    );
     fieldIncrementer++;
   }
   if (email) {
-    params.push(Number(email));
-    filtering.push(`${businessTableFields.email} = $${fieldIncrementer}`);
+    params.push(email);
+    filtering.push(`${businessesTableFields.email} = $${fieldIncrementer}`);
     fieldIncrementer++;
   }
   if (phone) {
     params.push(Number(phone));
-    filtering.push(`${businessTableFields.phone} = $${fieldIncrementer}`);
+    filtering.push(`${businessesTableFields.phone} = $${fieldIncrementer}`);
     fieldIncrementer++;
   }
   if (address) {
-    params.push(Number(address));
-    filtering.push(`${businessTableFields.address} = $${fieldIncrementer}`);
+    params.push(address);
+    filtering.push(`${businessesTableFields.address} = $${fieldIncrementer}`);
     fieldIncrementer++;
   }
   if (city) {
-    params.push(Number(city));
-    filtering.push(`${businessTableFields.city} = $${fieldIncrementer}`);
+    params.push(city);
+    filtering.push(`${businessesTableFields.city} = $${fieldIncrementer}`);
     fieldIncrementer++;
   }
   if (state) {
-    params.push(Number(state));
-    filtering.push(`${businessTableFields.state} = $${fieldIncrementer}`);
+    params.push(state);
+    filtering.push(`${businessesTableFields.state} = $${fieldIncrementer}`);
     fieldIncrementer++;
   }
   if (zip) {
     params.push(Number(zip));
-    filtering.push(`${businessTableFields.zip} = $${fieldIncrementer}`);
+    filtering.push(`${businessesTableFields.zip} = $${fieldIncrementer}`);
     fieldIncrementer++;
   }
 
   if (createdDate) {
     params.push(createdDate);
-    filtering.push(`${businessTableFields.createdDate} = $${fieldIncrementer}`);
+    filtering.push(
+      `${businessesTableFields.createdDate} = $${fieldIncrementer}`
+    );
     fieldIncrementer++;
   }
   if (createdBy) {
     params.push(Number(createdBy));
-    filtering.push(`${businessTableFields.createdBy} = $${fieldIncrementer}`);
+    filtering.push(`${businessesTableFields.createdBy} = $${fieldIncrementer}`);
     fieldIncrementer++;
   }
   if (updatedDate) {
     params.push(updatedDate);
-    filtering.push(`${businessTableFields.updatedDate} = $${fieldIncrementer}`);
+    filtering.push(
+      `${businessesTableFields.updatedDate} = $${fieldIncrementer}`
+    );
     fieldIncrementer++;
   }
   if (updatedBy) {
     params.push(Number(updatedBy));
-    filtering.push(`${businessTableFields.updatedBy} = $${fieldIncrementer}`);
+    filtering.push(`${businessesTableFields.updatedBy} = $${fieldIncrementer}`);
     fieldIncrementer++;
   }
   if (sort) {
@@ -122,7 +120,7 @@ const filterQuery = (query, statement) => {
     } else {
       direction = DESC;
     }
-    const tableFieldValue = businessTableFields[orderParam];
+    const tableFieldValue = businessesTableFields[orderParam];
 
     if (!tableFieldValue) {
       orderBy = '';
@@ -160,13 +158,13 @@ const filterQuery = (query, statement) => {
 const getBusinesses = async (req, res) => {
   const filteredQuery = filterQuery(req.query, GET_BUSINESSES);
   const results = await db.query(filteredQuery.sql, filteredQuery.params);
-  return res.json({ churches: results.rows });
+  return res.json({ businesses: results.rows });
 };
 
 const getBusinessById = async (req, res) => {
   const { id } = req.params;
   const results = await db.query(GET_BUSINESSES_BY_ID, [id]);
-  return res.json({ churches: results.rows[0] });
+  return res.json({ businesses: results.rows[0] });
 };
 
 const createBusiness = async (req, res) => {
@@ -205,7 +203,7 @@ const updateBusiness = async (req, res) => {
     req.body;
   if (name) {
     updateFields.push(name);
-    updateParams.push(`church_name = $${fieldIncrementer}`);
+    updateParams.push(`business_name = $${fieldIncrementer}`);
     fieldIncrementer++;
   }
   if (description) {
@@ -256,16 +254,16 @@ const updateBusiness = async (req, res) => {
   `;
   const { rows } = await db.query(statement, updateFields);
   logger.info(`Successfully updated business: ${JSON.stringify(rows[0])}`);
-  return res.json({ churches: rows[0] });
+  return res.json({ businesses: rows[0] });
 };
 
 const deleteBusiness = async (req, res) => {
   const { id } = req.params;
   await db.query(DELETE_BUSINESS_BY_ID, [id]);
-  const message = `Businesses: ${id} was successfully deleted`;
+  const message = `Business: ${id} was successfully deleted`;
   logger.info(message);
   return res.json({
-    churches: message,
+    businesses: message,
   });
 };
 
