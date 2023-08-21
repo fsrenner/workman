@@ -25,6 +25,25 @@ const createChurch = require('./churches/createChurch');
 const updateChurch = require('./churches/updateChurch');
 const deleteChurch = require('./churches/deleteChurch');
 
+// Church User Validators
+const getChurchUsers = require('./churchUsers/getChurchUsers');
+const getChurchUsersById = require('./churchUsers/getChurchUsersById');
+const getChurchUsersByUserId = require('./churchUsers/getChurchUsersByUserId');
+const getChurchUsersByChurchId = require('./churchUsers/getChurchUsersByChurchId');
+const createChurchUser = require('./churchUsers/createChurchUser');
+const updateChurchUser = require('./churchUsers/updateChurchUser');
+const deleteChurchUserById = require('./churchUsers/deleteChurchUserById');
+const deleteChurchUserByUserId = require('./churchUsers/deleteChurchUserByUserId');
+const deleteChurchUserByChurchId = require('./churchUsers/deleteChurchUserByChurchId');
+const deleteChurchUserByUserIdAndChurchId = require('./churchUsers/deleteChurchUserByUserIdAndChurchId');
+
+// Church Validators
+const getBusinesses = require('./businesses/getBusinesses');
+const getBusinessById = require('./businesses/getBusinessById');
+const createBusiness = require('./businesses/createBusiness');
+const updateBusiness = require('./businesses/updateBusiness');
+const deleteBusiness = require('./businesses/deleteBusiness');
+
 module.exports = {
   login,
   getUsers,
@@ -45,4 +64,19 @@ module.exports = {
   createChurch,
   updateChurch,
   deleteChurch,
+  getChurchUsers,
+  getChurchUsersById,
+  getChurchUsersByUserId,
+  getChurchUsersByChurchId,
+  createChurchUser,
+  updateChurchUser,
+  deleteChurchUserById,
+  deleteChurchUserByUserId,
+  deleteChurchUserByChurchId,
+  deleteChurchUserByUserIdAndChurchId,
+  getBusinesses,
+  getBusinessById,
+  createBusiness,
+  updateBusiness,
+  deleteBusiness,
 };

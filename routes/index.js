@@ -23,6 +23,7 @@ const {
   usersRolesController,
   churchesController,
   churchUsersController,
+  businessesController,
 } = require('../controllers');
 
 router.use('/', logApiTransaction);
@@ -115,12 +116,12 @@ router.delete(
 // Churches Controllers
 router.get(
   '/churches',
-  [isAuthenticated, validators.getChurches],
+  [validators.getChurches],
   churchesController.getChurches
 );
 router.get(
   '/churches/:id',
-  [isAuthenticated, validators.getChurchById],
+  [validators.getChurchById],
   churchesController.getChurchById
 );
 router.post(
@@ -142,48 +143,79 @@ router.delete(
 // Church Users Controllers
 router.get(
   '/churchusers',
-  [isAuthenticated, canRead],
+  [isAuthenticated, canRead, validators.getChurchUsers],
   churchUsersController.getChurchUsers
 );
 router.get(
   '/churchusers/:id',
-  [isAuthenticated, canRead],
+  [isAuthenticated, canRead, validators.getChurchUsersById],
   churchUsersController.getChurchUsersById
 );
 router.get(
   '/churchusers/user/:userId',
-  [isAuthenticated, canRead],
+  [isAuthenticated, canRead, validators.getChurchUsersByUserId],
   churchUsersController.getChurchUsersByUserId
 );
 router.get(
   '/churchusers/church/:churchId',
-  [isAuthenticated, canRead],
+  [isAuthenticated, canRead, validators.getChurchUsersByChurchId],
   churchUsersController.getChurchUsersByChurchId
 );
 router.post(
   '/churchusers',
-  [isAuthenticated, canUpdateUser],
+  [isAuthenticated, canUpdateUser, validators.createChurchUser],
   churchUsersController.createChurchUser
 );
 router.delete(
   '/churchusers/:id',
-  [isAuthenticated, canUpdateUser],
+  [isAuthenticated, canUpdateUser, validators.updateChurchUser],
   churchUsersController.deleteChurchUsersById
 );
 router.delete(
   '/churchusers/user/:userId',
-  [isAuthenticated, canUpdateUser],
+  [isAuthenticated, canUpdateUser, validators.deleteChurchUserById],
   churchUsersController.deleteChurchUsersByUserId
 );
 router.delete(
   '/churchusers/church/:churchId',
-  [isAuthenticated, canUpdateUser],
+  [isAuthenticated, canUpdateUser, validators.deleteChurchUserByChurchId],
   churchUsersController.deleteChurchUsersByChurchId
 );
 router.delete(
   '/churchusers/user/:userId/church/:churchId',
-  [isAuthenticated, canUpdateUser],
+  [
+    isAuthenticated,
+    canUpdateUser,
+    validators.deleteChurchUserByUserIdAndChurchId,
+  ],
   churchUsersController.deleteChurchUsersByUserIdAndChurchId
+);
+
+// Businesses Controllers
+router.get(
+  '/businesses',
+  [validators.getBusinesses],
+  businessesController.getBusinesses
+);
+router.get(
+  '/businesses/:id',
+  [validators.getBusinessById],
+  businessesController.getBusinessById
+);
+router.post(
+  '/businesses',
+  [isAuthenticated, validators.createBusiness],
+  businessesController.createBusiness
+);
+router.put(
+  '/businesses/:id',
+  [isAuthenticated, canUpdate, validators.updateBusiness],
+  businessesController.updateBusiness
+);
+router.delete(
+  '/businesses/:id',
+  [isAuthenticated, canUpdate, validators.deleteBusiness],
+  businessesController.deleteBusiness
 );
 
 router.use(notFound);
