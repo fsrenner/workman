@@ -8,6 +8,7 @@ const {
   CREATE_CHURCH,
   DELETE_CHURCH_BY_ID,
 } = require('../queries/churches');
+const { convertDateMetaFields } = require('../util');
 
 const filterQuery = (query, statement) => {
   const DESC = 'desc';
@@ -176,13 +177,15 @@ const filterQuery = (query, statement) => {
 const getChurches = async (req, res) => {
   const filteredQuery = filterQuery(req.query, GET_CHURCHES);
   const results = await db.query(filteredQuery.sql, filteredQuery.params);
-  return res.json({ churches: results.rows });
+  const churches = convertDateMetaFields(results.rows);
+  return res.json({ churches });
 };
 
 const getChurchById = async (req, res) => {
   const { id } = req.params;
   const results = await db.query(GET_CHURCHES_BY_ID, [id]);
-  return res.json({ churches: results.rows[0] });
+  const churches = convertDateMetaFields(results.rows);
+  return res.json({ churches: churches[0] });
 };
 
 const createChurch = async (req, res) => {
@@ -215,8 +218,9 @@ const createChurch = async (req, res) => {
     zip,
     userId,
   ];
-  const { rows } = await db.query(CREATE_CHURCH, sqlParams);
-  const church = rows[0];
+  const results = await db.query(CREATE_CHURCH, sqlParams);
+  const churches = convertDateMetaFields(results.rows);
+  const church = churches[0];
   logger.info(`Created church: ${JSON.stringify(church)}`);
   return res.json({ churches: church });
 };
@@ -297,9 +301,10 @@ const updateChurch = async (req, res) => {
     WHERE church_id = $${fieldIncrementer}
     RETURNING *;
   `;
-  const { rows } = await db.query(statement, updateFields);
-  logger.info(`Successfully updated church: ${JSON.stringify(rows[0])}`);
-  return res.json({ churches: rows[0] });
+  const results = await db.query(statement, updateFields);
+  const churches = convertDateMetaFields(results.rows);
+  logger.info(`Successfully updated church: ${JSON.stringify(churches[0])}`);
+  return res.json({ churches: churches[0] });
 };
 
 const deleteChurch = async (req, res) => {

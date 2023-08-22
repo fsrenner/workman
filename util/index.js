@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign */
 const bcrypt = require('bcrypt');
 const db = require('../db');
 const { GET_EMAIL_OF_USERS } = require('../queries/users');
@@ -10,6 +11,21 @@ const {
 } = require('./permissions');
 
 const { userTableFields, usersRolesTableFields } = require('./constants');
+
+const epochFromDateString = (d) => {
+  let date;
+  if (typeof d === 'string') {
+    date = new Date(d);
+  } else {
+    date = d;
+  }
+  return (date.getTime() - date.getMilliseconds()) / 1000;
+};
+
+const dateFromEpoch = (epoch) => {
+  const date = new Date(epoch * 1000);
+  return `${date.getMonth() + 1}-${date.getDate()}-${date.getFullYear()}`;
+};
 
 exports.createHashedPassword = async (password) => {
   const salt = await bcrypt.genSalt(10);
@@ -33,20 +49,38 @@ exports.getWhereClauseParameters = (filterArray) => {
   return `WHERE ${filterArray.join(' AND ')}`;
 };
 
-exports.getDateFromEpoch = (epoch) => {
-  const date = new Date(epoch * 1000);
-  return `${date.getMonth() + 1}-${date.getDate()}-${date.getFullYear()}`;
-};
+exports.getDateFromEpoch = (epoch) => dateFromEpoch(epoch);
 
-exports.getEpochFromDateString = (d) => {
-  let date;
-  if (typeof d === 'string') {
-    date = new Date(d);
-  } else {
-    date = d;
-  }
-  return (date.getTime() - date.getMilliseconds()) / 1000;
-};
+exports.getEpochFromDateString = (d) => epochFromDateString(d);
+
+exports.convertUserDateFields = (rows) =>
+  rows.map((row) => {
+    if (row) {
+      if (row.date_of_birth) {
+        row.date_of_birth = dateFromEpoch(row.date_of_birth);
+      }
+      if (row.updated_date) {
+        row.updated_date = dateFromEpoch(row.updated_date);
+      }
+      if (row.created_date) {
+        row.created_date = dateFromEpoch(row.created_date);
+      }
+    }
+    return row;
+  });
+
+exports.convertDateMetaFields = (rows) =>
+  rows.map((row) => {
+    if (row) {
+      if (row.updated_date) {
+        row.updated_date = dateFromEpoch(row.updated_date);
+      }
+      if (row.created_date) {
+        row.created_date = dateFromEpoch(row.created_date);
+      }
+    }
+    return row;
+  });
 
 exports.getUserRoles = getUserRoles;
 exports.getRoles = getRoles;

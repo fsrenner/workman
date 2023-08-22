@@ -7,7 +7,11 @@ const {
   CREATE_BUSINESS,
   DELETE_BUSINESS_BY_ID,
 } = require('../queries/businesses');
-const { getWhereClauseParameters, getEpochFromDateString } = require('../util');
+const {
+  getWhereClauseParameters,
+  getEpochFromDateString,
+  convertDateMetaFields,
+} = require('../util');
 
 const filterQuery = (query, statement) => {
   const DESC = 'desc';
@@ -172,13 +176,15 @@ const filterQuery = (query, statement) => {
 const getBusinesses = async (req, res) => {
   const filteredQuery = filterQuery(req.query, GET_BUSINESSES);
   const results = await db.query(filteredQuery.sql, filteredQuery.params);
-  return res.json({ businesses: results.rows });
+  const businesses = convertDateMetaFields(results.rows);
+  return res.json({ businesses });
 };
 
 const getBusinessById = async (req, res) => {
   const { id } = req.params;
   const results = await db.query(GET_BUSINESSES_BY_ID, [id]);
-  return res.json({ businesses: results.rows[0] });
+  const businesses = convertDateMetaFields(results.rows);
+  return res.json({ businesses: businesses[0] });
 };
 
 const createBusiness = async (req, res) => {
@@ -201,10 +207,11 @@ const createBusiness = async (req, res) => {
     zip,
     userId,
   ];
-  const { rows } = await db.query(CREATE_BUSINESS, sqlParams);
-  const business = rows[0];
+  const result = await db.query(CREATE_BUSINESS, sqlParams);
+  const businesses = convertDateMetaFields(result.rows);
+  const business = businesses[0];
   logger.info(`Created business: ${JSON.stringify(business)}`);
-  return res.json({ business });
+  return res.json({ businesses: business });
 };
 
 const updateBusiness = async (req, res) => {
@@ -268,9 +275,12 @@ const updateBusiness = async (req, res) => {
     WHERE business_id = $${fieldIncrementer}
     RETURNING *;
   `;
-  const { rows } = await db.query(statement, updateFields);
-  logger.info(`Successfully updated business: ${JSON.stringify(rows[0])}`);
-  return res.json({ businesses: rows[0] });
+  const results = await db.query(statement, updateFields);
+  const businesses = convertDateMetaFields(results.rows);
+  logger.info(
+    `Successfully updated business: ${JSON.stringify(businesses[0])}`
+  );
+  return res.json({ businesses: businesses[0] });
 };
 
 const deleteBusiness = async (req, res) => {

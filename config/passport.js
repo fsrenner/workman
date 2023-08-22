@@ -8,6 +8,7 @@ const {
   GET_USER_BY_USERNAME,
   UPDATE_USER_LOGIN,
 } = require('../queries/users');
+const { convertUserDateFields, getDateFromEpoch } = require('../util');
 
 const serializeUser = (user, done) => {
   logger.debug(
@@ -17,8 +18,9 @@ const serializeUser = (user, done) => {
 };
 
 const deserializeUser = async (id, done) => {
-  const { rows } = await db.query(GET_USER_BY_ID, [id]);
-  const user = rows[0];
+  const result = await db.query(GET_USER_BY_ID, [id]);
+  const users = convertUserDateFields(result.rows);
+  const user = users[0];
   logger.debug(
     `Successfully deserialized the following user: ${JSON.stringify(user)}`
   );
@@ -29,8 +31,9 @@ const localStrategy = async (username, password, done) => {
   let message = '';
   logger.info(`Authenticating user: username = ${username}`);
   try {
-    const { rows } = await db.query(GET_USER_BY_USERNAME, [username]);
-    const user = rows[0];
+    const result = await db.query(GET_USER_BY_USERNAME, [username]);
+    const users = convertUserDateFields(result.rows);
+    const user = users[0];
     if (!user) {
       message = `There is no user found with the username: ${username}`;
       logger.warn(message);
@@ -45,6 +48,7 @@ const localStrategy = async (username, password, done) => {
     }
     try {
       await db.query(UPDATE_USER_LOGIN, [user.user_id]);
+      user.last_login = getDateFromEpoch(user.last_login);
     } catch (e) {
       logger.error(
         `There was a problem updating the user login: ${JSON.stringify(e)}`

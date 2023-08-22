@@ -8,7 +8,7 @@ const {
   DELETE_USERS_ROLES_BY_USER_ID,
   DELETE_USERS_ROLES_BY_USER_ID_AND_ROLE_ID,
 } = require('../queries/users_roles');
-const { getWhereClauseParameters } = require('../util');
+const { getWhereClauseParameters, convertDateMetaFields } = require('../util');
 const {
   usersRolesTableFields,
   usersRolesTableInsertValues,
@@ -123,19 +123,22 @@ const filterQuery = (query, statement) => {
 const getUsersRoles = async (req, res) => {
   const filteredQuery = filterQuery(req.query, GET_USER_ROLES);
   const results = await db.query(filteredQuery.sql, filteredQuery.params);
-  return res.json({ usersRoles: results.rows });
+  const usersRoles = convertDateMetaFields(results.rows);
+  return res.json({ usersRoles });
 };
 
 const getUsersRolesById = async (req, res) => {
   const { id } = req.params;
   const results = await db.query(GET_USERS_ROLES_BY_ID, [id]);
-  return res.json({ usersRoles: results.rows[0] });
+  const usersRoles = convertDateMetaFields(results.rows);
+  return res.json({ usersRoles: usersRoles[0] });
 };
 
 const getUsersRolesByUserId = async (req, res) => {
   const { userId } = req.params;
   const results = await db.query(GET_USER_ROLES_BY_USER_ID, [userId]);
-  return res.json({ usersRoles: results.rows });
+  const usersRoles = convertDateMetaFields(results.rows);
+  return res.json({ usersRoles });
 };
 
 const createUsersRoles = async (req, res) => {
@@ -161,7 +164,8 @@ const createUsersRoles = async (req, res) => {
   RETURNING *
 `;
   const results = await db.query(statement, params);
-  return res.json({ usersRoles: results.rows });
+  const usersRoles = convertDateMetaFields(results.rows);
+  return res.json({ usersRoles });
 };
 
 const deleteUsersRolesById = async (req, res) => {

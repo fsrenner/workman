@@ -14,6 +14,8 @@ const {
   isEmailUnique,
   userTableFields,
   getWhereClauseParameters,
+  getEpochFromDateString,
+  convertUserDateFields,
 } = require('../util');
 const { sendVerificationEmail } = require('./email');
 
@@ -193,13 +195,15 @@ const getUsers = async (req, res) => {
   logger.debug(fullQuery);
   logger.debug(params);
   const result = await db.query(fullQuery, params);
-  return res.json({ users: result.rows });
+  const users = convertUserDateFields(result.rows);
+  return res.json({ users });
 };
 
 const getUserById = async (req, res) => {
   const { userId } = req.params;
-  const { rows } = await db.query(GET_USER_BY_ID, [userId]);
-  return res.json({ users: rows[0] });
+  const result = await db.query(GET_USER_BY_ID, [userId]);
+  const users = convertUserDateFields(result.rows);
+  return res.json({ users: users[0] });
 };
 
 const createUser = async (req, res) => {
@@ -255,7 +259,7 @@ const createUser = async (req, res) => {
     hash,
     firstName,
     lastName,
-    dob || null,
+    getEpochFromDateString(dob) || null,
     phone || null,
     address || null,
     city || null,
@@ -264,8 +268,9 @@ const createUser = async (req, res) => {
     userId || 0,
   ];
 
-  const { rows } = await db.query(CREATE_USER, sqlParams);
-  const createdUser = rows[0];
+  const result = await db.query(CREATE_USER, sqlParams);
+  const users = convertUserDateFields(result.rows);
+  const createdUser = users[0];
   await db.query(CREATE_USERS_ROLES, [userId, 4, userId]);
   logger.info(`Created user: ${JSON.stringify(createdUser)}`);
   await sendVerificationEmail(req.body, createdUser.user_id);
@@ -289,7 +294,6 @@ const updateUser = async (req, res) => {
   const {
     username,
     email,
-    password,
     firstName,
     lastName,
     dob,
@@ -312,12 +316,6 @@ const updateUser = async (req, res) => {
     updateParams.push(`email = $${fieldIncrementer}`);
     fieldIncrementer++;
   }
-  if (password) {
-    const hash = await createHashedPassword(password);
-    updateFields.push(hash);
-    updateParams.push(`password_hash = $${fieldIncrementer}`);
-    fieldIncrementer++;
-  }
   if (firstName) {
     updateFields.push(firstName);
     updateParams.push(`first_name = $${fieldIncrementer}`);
@@ -329,7 +327,7 @@ const updateUser = async (req, res) => {
     fieldIncrementer++;
   }
   if (dob) {
-    updateFields.push(dob);
+    updateFields.push(getEpochFromDateString(dob));
     updateParams.push(`date_of_birth = $${fieldIncrementer}`);
     fieldIncrementer++;
   }
@@ -378,9 +376,10 @@ const updateUser = async (req, res) => {
     RETURNING *;
   `;
 
-  const { rows } = await db.query(statement, updateFields);
-  logger.info(`Successfully updated user: ${JSON.stringify(rows[0])}`);
-  return res.json({ users: rows[0] });
+  const result = await db.query(statement, updateFields);
+  const users = convertUserDateFields(result.rows);
+  logger.info(`Successfully updated user: ${JSON.stringify(users[0])}`);
+  return res.json({ users: users[0] });
 };
 
 const deleteUser = async (req, res) => {
