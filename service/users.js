@@ -55,52 +55,72 @@ const getUsers = async (req, res) => {
   }
   if (username) {
     params.push(username);
-    filtering.push(`${userTableFields.username} = $${fieldIncrementer}`);
+    filtering.push(
+      `${userTableFields.username} LIKE '%' || $${fieldIncrementer} || '%'`
+    );
     fieldIncrementer++;
   }
   if (email) {
     params.push(email);
-    filtering.push(`${userTableFields.email} = $${fieldIncrementer}`);
+    filtering.push(
+      `${userTableFields.email} LIKE '%' || $${fieldIncrementer} || '%'`
+    );
     fieldIncrementer++;
   }
   if (firstName) {
     params.push(firstName);
-    filtering.push(`${userTableFields.firstName} = $${fieldIncrementer}`);
+    filtering.push(
+      `${userTableFields.firstName} LIKE '%' || $${fieldIncrementer} || '%'`
+    );
     fieldIncrementer++;
   }
   if (lastName) {
     params.push(lastName);
-    filtering.push(`${userTableFields.lastName} = $${fieldIncrementer}`);
+    filtering.push(
+      `${userTableFields.lastName} LIKE '%' || $${fieldIncrementer} || '%'`
+    );
     fieldIncrementer++;
   }
   if (dob) {
     params.push(dob);
-    filtering.push(`${userTableFields.dob} = $${fieldIncrementer}`);
+    filtering.push(
+      `${userTableFields.dob} LIKE '%' || $${fieldIncrementer} || '%'`
+    );
     fieldIncrementer++;
   }
   if (phone) {
     params.push(phone);
-    filtering.push(`${userTableFields.phone} = $${fieldIncrementer}`);
+    filtering.push(
+      `${userTableFields.phone} LIKE '%' || $${fieldIncrementer} || '%'`
+    );
     fieldIncrementer++;
   }
   if (address) {
     params.push(address);
-    filtering.push(`${userTableFields.address} = $${fieldIncrementer}`);
+    filtering.push(
+      `${userTableFields.address} LIKE '%' || $${fieldIncrementer} || '%'`
+    );
     fieldIncrementer++;
   }
   if (city) {
     params.push(city);
-    filtering.push(`${userTableFields.city} = $${fieldIncrementer}`);
+    filtering.push(
+      `${userTableFields.city} LIKE '%' || $${fieldIncrementer} || '%'`
+    );
     fieldIncrementer++;
   }
   if (state) {
     params.push(state);
-    filtering.push(`${userTableFields.state} = $${fieldIncrementer}`);
+    filtering.push(
+      `${userTableFields.state} LIKE '%' || $${fieldIncrementer} || '%'`
+    );
     fieldIncrementer++;
   }
   if (zip) {
     params.push(Number(zip));
-    filtering.push(`${userTableFields.zip} = $${fieldIncrementer}`);
+    filtering.push(
+      `${userTableFields.zip} LIKE '%' || $${fieldIncrementer} || '%'`
+    );
     fieldIncrementer++;
   }
   if (lastLogin) {
@@ -343,7 +363,9 @@ const updateUser = async (req, res) => {
     updateParams.push(`verified = $${fieldIncrementer}`);
     fieldIncrementer++;
   }
-  updateParams.push(`updated_date = now()`);
+  updateParams.push(
+    `updated_date = CAST (EXTRACT (epoch from current_timestamp) AS BIGINT)`
+  );
   updateFields.push(req.session.userId);
   updateParams.push(`updated_by = $${fieldIncrementer}`);
   fieldIncrementer++;

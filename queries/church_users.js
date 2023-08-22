@@ -29,7 +29,7 @@ exports.CREATE_CHURCH_USERS = `
   ) VALUES (
     $1,
     $2,
-    now(),
+    CAST (EXTRACT (epoch from current_timestamp) AS BIGINT),
     $3,
     null,
     null

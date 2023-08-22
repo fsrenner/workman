@@ -1,5 +1,10 @@
 const Joi = require('joi');
-const { alphaNumSpaceDash, phone, zip } = require('../../../util/constants');
+const {
+  alphaNumSpaceDash,
+  phone,
+  zip,
+  dob,
+} = require('../../../util/constants');
 
 const schema = Joi.object().keys({
   username: Joi.string().alphanum().min(3).max(30).required(),
@@ -7,7 +12,7 @@ const schema = Joi.object().keys({
   email: Joi.string().email().required(),
   firstName: Joi.string().pattern(alphaNumSpaceDash).min(3).max(30).required(),
   lastName: Joi.string().pattern(alphaNumSpaceDash).min(3).max(30).required(),
-  dob: Joi.string().allow('', null),
+  dob: Joi.string().pattern(dob).allow('', null),
   phone: Joi.alternatives().try(
     Joi.number().max(9999999999),
     Joi.string().pattern(phone).length(10).allow('', null)

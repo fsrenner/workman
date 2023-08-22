@@ -43,51 +43,67 @@ const filterQuery = (query, statement) => {
     fieldIncrementer++;
   }
   if (name) {
-    params.push(Number(name));
-    filtering.push(`${churchesTableFields.name} = $${fieldIncrementer}`);
+    params.push(name);
+    filtering.push(
+      `${churchesTableFields.name} LIKE '%' || $${fieldIncrementer} || '%'`
+    );
     fieldIncrementer++;
   }
   if (denomination) {
-    params.push(Number(denomination));
+    params.push(denomination);
     filtering.push(
-      `${churchesTableFields.denomination} = $${fieldIncrementer}`
+      `${churchesTableFields.denomination} LIKE '%' || $${fieldIncrementer} || '%'`
     );
     fieldIncrementer++;
   }
 
   if (description) {
-    params.push(Number(description));
-    filtering.push(`${churchesTableFields.description} = $${fieldIncrementer}`);
+    params.push(description);
+    filtering.push(
+      `${churchesTableFields.description} LIKE '%' || $${fieldIncrementer} || '%'`
+    );
     fieldIncrementer++;
   }
   if (email) {
-    params.push(Number(email));
-    filtering.push(`${churchesTableFields.email} = $${fieldIncrementer}`);
+    params.push(email);
+    filtering.push(
+      `${churchesTableFields.email} LIKE '%' || $${fieldIncrementer} || '%'`
+    );
     fieldIncrementer++;
   }
   if (phone) {
-    params.push(Number(phone));
-    filtering.push(`${churchesTableFields.phone} = $${fieldIncrementer}`);
+    params.push(phone);
+    filtering.push(
+      `${churchesTableFields.phone} LIKE '%' || $${fieldIncrementer} || '%'`
+    );
     fieldIncrementer++;
   }
   if (address) {
-    params.push(Number(address));
-    filtering.push(`${churchesTableFields.address} = $${fieldIncrementer}`);
+    params.push(address);
+    filtering.push(
+      `${churchesTableFields.address} LIKE '%' || $${fieldIncrementer} || '%'`
+    );
     fieldIncrementer++;
   }
   if (city) {
-    params.push(Number(city));
-    filtering.push(`${churchesTableFields.city} = $${fieldIncrementer}`);
+    params.push(city);
+    filtering.push(
+      `${churchesTableFields.city} LIKE '%' || $${fieldIncrementer} || '%'`
+    );
     fieldIncrementer++;
   }
   if (state) {
-    params.push(Number(state));
-    filtering.push(`${churchesTableFields.state} = $${fieldIncrementer}`);
+    params.push(state);
+    filtering.push(
+      `${churchesTableFields.state} LIKE '%' || $${fieldIncrementer} || '%'`
+    );
     fieldIncrementer++;
   }
   if (zip) {
-    params.push(Number(zip));
-    filtering.push(`${churchesTableFields.zip} = $${fieldIncrementer}`);
+    params.push(zip);
+    filtering.push(
+      `${churchesTableFields.zip} LIKE '%' || $${fieldIncrementer} || '%'`
+    );
     fieldIncrementer++;
   }
 
@@ -268,7 +284,9 @@ const updateChurch = async (req, res) => {
     updateParams.push(`zip = $${fieldIncrementer}`);
     fieldIncrementer++;
   }
-  updateParams.push(`updated_date = now()`);
+  updateParams.push(
+    `updated_date = CAST (EXTRACT (epoch from current_timestamp) AS BIGINT)`
+  );
   updateFields.push(userId);
   updateParams.push(`updated_by = $${fieldIncrementer}`);
   fieldIncrementer++;

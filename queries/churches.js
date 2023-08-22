@@ -25,7 +25,7 @@ exports.CREATE_CHURCH = `
     $7,
     $8,
     $9,
-    now(),
+    CAST (EXTRACT (epoch from current_timestamp) AS BIGINT),
     $10,
     null,
     null

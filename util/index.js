@@ -33,6 +33,21 @@ exports.getWhereClauseParameters = (filterArray) => {
   return `WHERE ${filterArray.join(' AND ')}`;
 };
 
+exports.getDateFromEpoch = (epoch) => {
+  const date = new Date(epoch * 1000);
+  return `${date.getMonth() + 1}-${date.getDate()}-${date.getFullYear()}`;
+};
+
+exports.getEpochFromDateString = (d) => {
+  let date;
+  if (typeof d === 'string') {
+    date = new Date(d);
+  } else {
+    date = d;
+  }
+  return (date.getTime() - date.getMilliseconds()) / 1000;
+};
+
 exports.getUserRoles = getUserRoles;
 exports.getRoles = getRoles;
 exports.isAdmin = isAdmin;

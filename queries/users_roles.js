@@ -23,7 +23,7 @@ exports.CREATE_USERS_ROLES = `
   ) VALUES (
     $1,
     $2,
-    now(),
+    CAST (EXTRACT (epoch from current_timestamp) AS BIGINT),
     $3,
     null,
     null

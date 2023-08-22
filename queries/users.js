@@ -78,7 +78,7 @@ exports.CREATE_USER = `
         $10,
         $11,
         null,
-        now(),
+        CAST (EXTRACT (epoch from current_timestamp) AS BIGINT),
         $12,
         null,
         null
