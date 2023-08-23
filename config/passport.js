@@ -48,7 +48,6 @@ const localStrategy = async (username, password, done) => {
     }
     try {
       await db.query(UPDATE_USER_LOGIN, [user.user_id]);
-      user.last_login = getDateFromEpoch(user.last_login);
     } catch (e) {
       logger.error(
         `There was a problem updating the user login: ${JSON.stringify(e)}`

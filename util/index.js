@@ -59,6 +59,9 @@ exports.convertUserDateFields = (rows) =>
       if (row.date_of_birth) {
         row.date_of_birth = dateFromEpoch(row.date_of_birth);
       }
+      if (row.last_login) {
+        row.last_login = dateFromEpoch(row.last_login);
+      }
       if (row.updated_date) {
         row.updated_date = dateFromEpoch(row.updated_date);
       }
