@@ -78,7 +78,7 @@ exports.CREATE_USER = `
         $10,
         $11,
         null,
-        now(),
+        CAST (EXTRACT (epoch from current_timestamp) AS BIGINT),
         $12,
         null,
         null
@@ -91,7 +91,7 @@ exports.VERIFY_USER = `
 
 exports.UPDATE_USER_LOGIN = `
     UPDATE users
-    SET last_login = now()
+    SET last_login = CAST (EXTRACT (epoch from current_timestamp) AS BIGINT)
     WHERE user_id = $1;`;
 
 exports.DELETE_USER = `DELETE FROM users WHERE user_id = $1;`;

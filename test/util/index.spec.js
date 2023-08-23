@@ -3,6 +3,8 @@ const {
   createHashedPassword,
   isEmailUnique,
   getWhereClauseParameters,
+  getDateFromEpoch,
+  getEpochFromDateString,
 } = require('../../util');
 
 describe('Util Index Tests', () => {
@@ -42,6 +44,19 @@ describe('Util Index Tests', () => {
     it('Should return empty string when no params provided', (done) => {
       const whereClause = getWhereClauseParameters([]);
       expect(whereClause).toEqual('');
+      done();
+    });
+    it('Should return an epoch timestamp', (done) => {
+      const dateString = '12-31-1999';
+      const timestamp = 946620000;
+      expect(getEpochFromDateString(dateString)).toEqual(timestamp);
+      expect(getEpochFromDateString(new Date(dateString))).toEqual(timestamp);
+      done();
+    });
+    it('Should return a date', (done) => {
+      const dateString = '12-31-1999';
+      const timestamp = 946620000;
+      expect(getDateFromEpoch(timestamp)).toEqual(dateString);
       done();
     });
   });

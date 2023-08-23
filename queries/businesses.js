@@ -24,7 +24,7 @@ exports.CREATE_BUSINESS = `
     $6,
     $7,
     $8,
-    now(),
+    CAST (EXTRACT (epoch from current_timestamp) AS BIGINT),
     $9,
     null,
     null

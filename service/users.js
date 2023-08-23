@@ -14,6 +14,8 @@ const {
   isEmailUnique,
   userTableFields,
   getWhereClauseParameters,
+  getEpochFromDateString,
+  convertUserDateFields,
 } = require('../util');
 const { sendVerificationEmail } = require('./email');
 
@@ -55,52 +57,72 @@ const getUsers = async (req, res) => {
   }
   if (username) {
     params.push(username);
-    filtering.push(`${userTableFields.username} = $${fieldIncrementer}`);
+    filtering.push(
+      `${userTableFields.username} LIKE '%' || $${fieldIncrementer} || '%'`
+    );
     fieldIncrementer++;
   }
   if (email) {
     params.push(email);
-    filtering.push(`${userTableFields.email} = $${fieldIncrementer}`);
+    filtering.push(
+      `${userTableFields.email} LIKE '%' || $${fieldIncrementer} || '%'`
+    );
     fieldIncrementer++;
   }
   if (firstName) {
     params.push(firstName);
-    filtering.push(`${userTableFields.firstName} = $${fieldIncrementer}`);
+    filtering.push(
+      `${userTableFields.firstName} LIKE '%' || $${fieldIncrementer} || '%'`
+    );
     fieldIncrementer++;
   }
   if (lastName) {
     params.push(lastName);
-    filtering.push(`${userTableFields.lastName} = $${fieldIncrementer}`);
+    filtering.push(
+      `${userTableFields.lastName} LIKE '%' || $${fieldIncrementer} || '%'`
+    );
     fieldIncrementer++;
   }
   if (dob) {
     params.push(dob);
-    filtering.push(`${userTableFields.dob} = $${fieldIncrementer}`);
+    filtering.push(
+      `${userTableFields.dob} LIKE '%' || $${fieldIncrementer} || '%'`
+    );
     fieldIncrementer++;
   }
   if (phone) {
     params.push(phone);
-    filtering.push(`${userTableFields.phone} = $${fieldIncrementer}`);
+    filtering.push(
+      `${userTableFields.phone} LIKE '%' || $${fieldIncrementer} || '%'`
+    );
     fieldIncrementer++;
   }
   if (address) {
     params.push(address);
-    filtering.push(`${userTableFields.address} = $${fieldIncrementer}`);
+    filtering.push(
+      `${userTableFields.address} LIKE '%' || $${fieldIncrementer} || '%'`
+    );
     fieldIncrementer++;
   }
   if (city) {
     params.push(city);
-    filtering.push(`${userTableFields.city} = $${fieldIncrementer}`);
+    filtering.push(
+      `${userTableFields.city} LIKE '%' || $${fieldIncrementer} || '%'`
+    );
     fieldIncrementer++;
   }
   if (state) {
     params.push(state);
-    filtering.push(`${userTableFields.state} = $${fieldIncrementer}`);
+    filtering.push(
+      `${userTableFields.state} LIKE '%' || $${fieldIncrementer} || '%'`
+    );
     fieldIncrementer++;
   }
   if (zip) {
     params.push(Number(zip));
-    filtering.push(`${userTableFields.zip} = $${fieldIncrementer}`);
+    filtering.push(
+      `${userTableFields.zip} LIKE '%' || $${fieldIncrementer} || '%'`
+    );
     fieldIncrementer++;
   }
   if (lastLogin) {
@@ -173,13 +195,15 @@ const getUsers = async (req, res) => {
   logger.debug(fullQuery);
   logger.debug(params);
   const result = await db.query(fullQuery, params);
-  return res.json({ users: result.rows });
+  const users = convertUserDateFields(result.rows);
+  return res.json({ users });
 };
 
 const getUserById = async (req, res) => {
   const { userId } = req.params;
-  const { rows } = await db.query(GET_USER_BY_ID, [userId]);
-  return res.json({ users: rows[0] });
+  const result = await db.query(GET_USER_BY_ID, [userId]);
+  const users = convertUserDateFields(result.rows);
+  return res.json({ users: users[0] });
 };
 
 const createUser = async (req, res) => {
@@ -235,7 +259,7 @@ const createUser = async (req, res) => {
     hash,
     firstName,
     lastName,
-    dob || null,
+    getEpochFromDateString(dob) || null,
     phone || null,
     address || null,
     city || null,
@@ -244,8 +268,9 @@ const createUser = async (req, res) => {
     userId || 0,
   ];
 
-  const { rows } = await db.query(CREATE_USER, sqlParams);
-  const createdUser = rows[0];
+  const result = await db.query(CREATE_USER, sqlParams);
+  const users = convertUserDateFields(result.rows);
+  const createdUser = users[0];
   await db.query(CREATE_USERS_ROLES, [userId, 4, userId]);
   logger.info(`Created user: ${JSON.stringify(createdUser)}`);
   await sendVerificationEmail(req.body, createdUser.user_id);
@@ -269,7 +294,6 @@ const updateUser = async (req, res) => {
   const {
     username,
     email,
-    password,
     firstName,
     lastName,
     dob,
@@ -292,12 +316,6 @@ const updateUser = async (req, res) => {
     updateParams.push(`email = $${fieldIncrementer}`);
     fieldIncrementer++;
   }
-  if (password) {
-    const hash = await createHashedPassword(password);
-    updateFields.push(hash);
-    updateParams.push(`password_hash = $${fieldIncrementer}`);
-    fieldIncrementer++;
-  }
   if (firstName) {
     updateFields.push(firstName);
     updateParams.push(`first_name = $${fieldIncrementer}`);
@@ -309,7 +327,7 @@ const updateUser = async (req, res) => {
     fieldIncrementer++;
   }
   if (dob) {
-    updateFields.push(dob);
+    updateFields.push(getEpochFromDateString(dob));
     updateParams.push(`date_of_birth = $${fieldIncrementer}`);
     fieldIncrementer++;
   }
@@ -343,7 +361,9 @@ const updateUser = async (req, res) => {
     updateParams.push(`verified = $${fieldIncrementer}`);
     fieldIncrementer++;
   }
-  updateParams.push(`updated_date = now()`);
+  updateParams.push(
+    `updated_date = CAST (EXTRACT (epoch from current_timestamp) AS BIGINT)`
+  );
   updateFields.push(req.session.userId);
   updateParams.push(`updated_by = $${fieldIncrementer}`);
   fieldIncrementer++;
@@ -356,9 +376,10 @@ const updateUser = async (req, res) => {
     RETURNING *;
   `;
 
-  const { rows } = await db.query(statement, updateFields);
-  logger.info(`Successfully updated user: ${JSON.stringify(rows[0])}`);
-  return res.json({ users: rows[0] });
+  const result = await db.query(statement, updateFields);
+  const users = convertUserDateFields(result.rows);
+  logger.info(`Successfully updated user: ${JSON.stringify(users[0])}`);
+  return res.json({ users: users[0] });
 };
 
 const deleteUser = async (req, res) => {

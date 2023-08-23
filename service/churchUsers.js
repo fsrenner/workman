@@ -11,7 +11,7 @@ const {
   DELETE_CHURCH_USERS_BY_CHURCH_ID,
   DELETE_CHURCH_USERS_BY_USER_ID_AND_CHURCH_ID,
 } = require('../queries/church_users');
-const { getWhereClauseParameters } = require('../util');
+const { getWhereClauseParameters, convertDateMetaFields } = require('../util');
 const { churchUsersTableFields } = require('../util/constants');
 
 const filterQuery = (query, statement) => {
@@ -127,25 +127,29 @@ const filterQuery = (query, statement) => {
 const getChurchUsers = async (req, res) => {
   const filteredQuery = filterQuery(req.query, GET_CHURCH_USER);
   const results = await db.query(filteredQuery.sql, filteredQuery.params);
-  return res.json({ churchUsers: results.rows });
+  const churchUsers = convertDateMetaFields(results.rows);
+  return res.json({ churchUsers });
 };
 
 const getChurchUsersById = async (req, res) => {
   const { id } = req.params;
   const results = await db.query(GET_CHURCH_USERS_BY_ID, [id]);
-  return res.json({ churchUsers: results.rows[0] });
+  const churchUsers = convertDateMetaFields(results.rows);
+  return res.json({ churchUsers: churchUsers[0] });
 };
 
 const getChurchUsersByUserId = async (req, res) => {
   const { userId } = req.params;
   const results = await db.query(GET_CHURCH_USERS_BY_USER_ID, [userId]);
-  return res.json({ churchUsers: results.rows });
+  const churchUsers = convertDateMetaFields(results.rows);
+  return res.json({ churchUsers });
 };
 
 const getChurchUsersByChurchId = async (req, res) => {
   const { churchId } = req.params;
   const results = await db.query(GET_CHURCH_USERS_BY_CHURCH_ID, [churchId]);
-  return res.json({ churchUsers: results.rows });
+  const churchUsers = convertDateMetaFields(results.rows);
+  return res.json({ churchUsers });
 };
 
 const createChurchUser = async (req, res) => {
@@ -165,7 +169,8 @@ const createChurchUser = async (req, res) => {
 
   const sqlParams = [userId, churchId, sessionId];
   const results = await db.query(CREATE_CHURCH_USERS, sqlParams);
-  return res.json({ churchUsers: results.rows });
+  const churchUsers = convertDateMetaFields(results.rows);
+  return res.json({ churchUsers });
 };
 
 const deleteChurchUsersById = async (req, res) => {

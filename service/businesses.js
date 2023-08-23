@@ -7,7 +7,11 @@ const {
   CREATE_BUSINESS,
   DELETE_BUSINESS_BY_ID,
 } = require('../queries/businesses');
-const { getWhereClauseParameters } = require('../util');
+const {
+  getWhereClauseParameters,
+  getEpochFromDateString,
+  convertDateMetaFields,
+} = require('../util');
 
 const filterQuery = (query, statement) => {
   const DESC = 'desc';
@@ -43,50 +47,64 @@ const filterQuery = (query, statement) => {
   }
   if (name) {
     params.push(name);
-    filtering.push(`${businessesTableFields.name} = $${fieldIncrementer}`);
+    filtering.push(
+      `${businessesTableFields.name} LIKE '%' || $${fieldIncrementer} || '%'`
+    );
     fieldIncrementer++;
   }
 
   if (description) {
     params.push(description);
     filtering.push(
-      `${businessesTableFields.description} = $${fieldIncrementer}`
+      `${businessesTableFields.description} LIKE '%' || $${fieldIncrementer} || '%'`
     );
     fieldIncrementer++;
   }
   if (email) {
     params.push(email);
-    filtering.push(`${businessesTableFields.email} = $${fieldIncrementer}`);
+    filtering.push(
+      `${businessesTableFields.email} LIKE '%' || $${fieldIncrementer} || '%'`
+    );
     fieldIncrementer++;
   }
   if (phone) {
     params.push(Number(phone));
-    filtering.push(`${businessesTableFields.phone} = $${fieldIncrementer}`);
+    filtering.push(
+      `${businessesTableFields.phone} LIKE '%' || $${fieldIncrementer} || '%'`
+    );
     fieldIncrementer++;
   }
   if (address) {
     params.push(address);
-    filtering.push(`${businessesTableFields.address} = $${fieldIncrementer}`);
+    filtering.push(
+      `${businessesTableFields.address} LIKE '%' || $${fieldIncrementer} || '%'`
+    );
     fieldIncrementer++;
   }
   if (city) {
     params.push(city);
-    filtering.push(`${businessesTableFields.city} = $${fieldIncrementer}`);
+    filtering.push(
+      `${businessesTableFields.city} LIKE '%' || $${fieldIncrementer} || '%'`
+    );
     fieldIncrementer++;
   }
   if (state) {
     params.push(state);
-    filtering.push(`${businessesTableFields.state} = $${fieldIncrementer}`);
+    filtering.push(
+      `${businessesTableFields.state} LIKE '%' || $${fieldIncrementer} || '%'`
+    );
     fieldIncrementer++;
   }
   if (zip) {
     params.push(Number(zip));
-    filtering.push(`${businessesTableFields.zip} = $${fieldIncrementer}`);
+    filtering.push(
+      `${businessesTableFields.zip} LIKE '%' || $${fieldIncrementer} || '%'`
+    );
     fieldIncrementer++;
   }
 
   if (createdDate) {
-    params.push(createdDate);
+    params.push(getEpochFromDateString(createdDate));
     filtering.push(
       `${businessesTableFields.createdDate} = $${fieldIncrementer}`
     );
@@ -98,7 +116,7 @@ const filterQuery = (query, statement) => {
     fieldIncrementer++;
   }
   if (updatedDate) {
-    params.push(updatedDate);
+    params.push(getEpochFromDateString(updatedDate));
     filtering.push(
       `${businessesTableFields.updatedDate} = $${fieldIncrementer}`
     );
@@ -158,13 +176,15 @@ const filterQuery = (query, statement) => {
 const getBusinesses = async (req, res) => {
   const filteredQuery = filterQuery(req.query, GET_BUSINESSES);
   const results = await db.query(filteredQuery.sql, filteredQuery.params);
-  return res.json({ businesses: results.rows });
+  const businesses = convertDateMetaFields(results.rows);
+  return res.json({ businesses });
 };
 
 const getBusinessById = async (req, res) => {
   const { id } = req.params;
   const results = await db.query(GET_BUSINESSES_BY_ID, [id]);
-  return res.json({ businesses: results.rows[0] });
+  const businesses = convertDateMetaFields(results.rows);
+  return res.json({ businesses: businesses[0] });
 };
 
 const createBusiness = async (req, res) => {
@@ -187,10 +207,11 @@ const createBusiness = async (req, res) => {
     zip,
     userId,
   ];
-  const { rows } = await db.query(CREATE_BUSINESS, sqlParams);
-  const business = rows[0];
+  const result = await db.query(CREATE_BUSINESS, sqlParams);
+  const businesses = convertDateMetaFields(result.rows);
+  const business = businesses[0];
   logger.info(`Created business: ${JSON.stringify(business)}`);
-  return res.json({ business });
+  return res.json({ businesses: business });
 };
 
 const updateBusiness = async (req, res) => {
@@ -241,7 +262,9 @@ const updateBusiness = async (req, res) => {
     updateParams.push(`zip = $${fieldIncrementer}`);
     fieldIncrementer++;
   }
-  updateParams.push(`updated_date = now()`);
+  updateParams.push(
+    `updated_date = CAST (EXTRACT (epoch from current_timestamp) AS BIGINT)`
+  );
   updateFields.push(userId);
   updateParams.push(`updated_by = $${fieldIncrementer}`);
   fieldIncrementer++;
@@ -252,9 +275,12 @@ const updateBusiness = async (req, res) => {
     WHERE business_id = $${fieldIncrementer}
     RETURNING *;
   `;
-  const { rows } = await db.query(statement, updateFields);
-  logger.info(`Successfully updated business: ${JSON.stringify(rows[0])}`);
-  return res.json({ businesses: rows[0] });
+  const results = await db.query(statement, updateFields);
+  const businesses = convertDateMetaFields(results.rows);
+  logger.info(
+    `Successfully updated business: ${JSON.stringify(businesses[0])}`
+  );
+  return res.json({ businesses: businesses[0] });
 };
 
 const deleteBusiness = async (req, res) => {

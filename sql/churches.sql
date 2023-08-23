@@ -1,3 +1,5 @@
+DROP TABLE IF EXISTS churches;
+
 CREATE TABLE IF NOT EXISTS churches (
     church_id SERIAL PRIMARY KEY,
     church_name VARCHAR(100),
@@ -9,9 +11,9 @@ CREATE TABLE IF NOT EXISTS churches (
     city VARCHAR(50),
     state VARCHAR(50),
     zip INTEGER,
-    created_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    created_by INTEGER NOT NULL DEFAULT 1,
-    updated_date TIMESTAMP,
+    created_date BIGINT NOT NULL DEFAULT CAST (EXTRACT (epoch from current_timestamp) AS BIGINT),
+    created_by INTEGER NOT NULL DEFAULT 0,
+    updated_date BIGINT,
     updated_by INTEGER
 );
 
@@ -24,11 +26,7 @@ insert into churches (
     address,
     city,
     state,
-    zip,
-    created_date,
-    created_by,
-    updated_date,
-    updated_by
+    zip
 ) values (
     'Reformed Bible Church',
     null,
@@ -38,9 +36,5 @@ insert into churches (
     '18943-H Business Hwy 13',
     'Branson West',
     'MO',
-    65737,
-    now(),
-    1,
-    null,
-    null
+    65737
 );

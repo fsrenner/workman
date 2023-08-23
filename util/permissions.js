@@ -1,6 +1,6 @@
 const db = require('../db');
 const { GET_ROLES } = require('../queries/roles');
-const { GET_USERS_ROLES_BY_ID } = require('../queries/users_roles');
+const { GET_USER_ROLES_BY_USER_ID } = require('../queries/users_roles');
 
 const ADMIN = 1;
 const MANAGER = 2;
@@ -12,7 +12,7 @@ const getRoles = async () => {
 };
 
 const getUserRoles = async (id) => {
-  const { rows } = await db.query(GET_USERS_ROLES_BY_ID, [id]);
+  const { rows } = await db.query(GET_USER_ROLES_BY_USER_ID, [id]);
   const roles = rows.map((role) => role.role_id);
   return roles;
 };
