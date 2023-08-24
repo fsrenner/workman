@@ -31,7 +31,6 @@ const getChurchUsersById = require('./churchUsers/getChurchUsersById');
 const getChurchUsersByUserId = require('./churchUsers/getChurchUsersByUserId');
 const getChurchUsersByChurchId = require('./churchUsers/getChurchUsersByChurchId');
 const createChurchUser = require('./churchUsers/createChurchUser');
-const updateChurchUser = require('./churchUsers/updateChurchUser');
 const deleteChurchUserById = require('./churchUsers/deleteChurchUserById');
 const deleteChurchUserByUserId = require('./churchUsers/deleteChurchUserByUserId');
 const deleteChurchUserByChurchId = require('./churchUsers/deleteChurchUserByChurchId');
@@ -69,7 +68,6 @@ module.exports = {
   getChurchUsersByUserId,
   getChurchUsersByChurchId,
   createChurchUser,
-  updateChurchUser,
   deleteChurchUserById,
   deleteChurchUserByUserId,
   deleteChurchUserByChurchId,

@@ -25,6 +25,7 @@ const filterQuery = (query, statement) => {
     denomination,
     description,
     email,
+    website,
     phone,
     address,
     city,
@@ -69,6 +70,13 @@ const filterQuery = (query, statement) => {
     params.push(email);
     filtering.push(
       `${churchesTableFields.email} LIKE '%' || $${fieldIncrementer} || '%'`
+    );
+    fieldIncrementer++;
+  }
+  if (website) {
+    params.push(website);
+    filtering.push(
+      `${churchesTableFields.website} LIKE '%' || $${fieldIncrementer} || '%'`
     );
     fieldIncrementer++;
   }
@@ -195,6 +203,7 @@ const createChurch = async (req, res) => {
     denomination,
     description,
     email,
+    website,
     phone,
     address,
     city,
@@ -211,6 +220,7 @@ const createChurch = async (req, res) => {
     denomination,
     description,
     email,
+    website,
     phone,
     address,
     city,
@@ -236,6 +246,7 @@ const updateChurch = async (req, res) => {
     denomination,
     description,
     email,
+    website,
     phone,
     address,
     city,
@@ -260,6 +271,11 @@ const updateChurch = async (req, res) => {
   }
   if (email) {
     updateFields.push(email);
+    updateParams.push(`email = $${fieldIncrementer}`);
+    fieldIncrementer++;
+  }
+  if (website) {
+    updateFields.push(website);
     updateParams.push(`email = $${fieldIncrementer}`);
     fieldIncrementer++;
   }

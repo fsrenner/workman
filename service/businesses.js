@@ -27,6 +27,7 @@ const filterQuery = (query, statement) => {
     name,
     description,
     email,
+    website,
     phone,
     address,
     city,
@@ -57,6 +58,13 @@ const filterQuery = (query, statement) => {
     params.push(description);
     filtering.push(
       `${businessesTableFields.description} LIKE '%' || $${fieldIncrementer} || '%'`
+    );
+    fieldIncrementer++;
+  }
+  if (website) {
+    params.push(website);
+    filtering.push(
+      `${businessesTableFields.website} LIKE '%' || $${fieldIncrementer} || '%'`
     );
     fieldIncrementer++;
   }
@@ -189,8 +197,17 @@ const getBusinessById = async (req, res) => {
 
 const createBusiness = async (req, res) => {
   const { userId } = req.session;
-  const { name, description, email, phone, address, city, state, zip } =
-    req.body;
+  const {
+    name,
+    description,
+    email,
+    website,
+    phone,
+    address,
+    city,
+    state,
+    zip,
+  } = req.body;
   if (!name) {
     return res.status(400).json({
       message: `The name of the business is required`,
@@ -200,6 +217,7 @@ const createBusiness = async (req, res) => {
     name,
     description,
     email,
+    website,
     phone,
     address,
     city,
@@ -220,8 +238,17 @@ const updateBusiness = async (req, res) => {
   const updateParams = [];
   const { id } = req.params;
   const { userId } = req.session;
-  const { name, description, email, phone, address, city, state, zip } =
-    req.body;
+  const {
+    name,
+    description,
+    email,
+    website,
+    phone,
+    address,
+    city,
+    state,
+    zip,
+  } = req.body;
   if (name) {
     updateFields.push(name);
     updateParams.push(`business_name = $${fieldIncrementer}`);
@@ -234,6 +261,11 @@ const updateBusiness = async (req, res) => {
   }
   if (email) {
     updateFields.push(email);
+    updateParams.push(`email = $${fieldIncrementer}`);
+    fieldIncrementer++;
+  }
+  if (website) {
+    updateFields.push(website);
     updateParams.push(`email = $${fieldIncrementer}`);
     fieldIncrementer++;
   }
