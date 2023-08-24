@@ -5,6 +5,7 @@ CREATE TABLE IF NOT EXISTS businesses (
     business_name VARCHAR(100) NOT NULL,
     description TEXT,
     email VARCHAR(100),
+    website VARCHAR(50),
     phone_number VARCHAR(20),
     address VARCHAR(200),
     city VARCHAR(50),

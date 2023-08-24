@@ -6,6 +6,7 @@ exports.CREATE_CHURCH = `
     denomination,
     description,
     email,
+    website,
     phone_number,
     address,
     city,
@@ -25,8 +26,9 @@ exports.CREATE_CHURCH = `
     $7,
     $8,
     $9,
-    CAST (EXTRACT (epoch from current_timestamp) AS BIGINT),
     $10,
+    CAST (EXTRACT (epoch from current_timestamp) AS BIGINT),
+    $11,
     null,
     null
   ) RETURNING *

@@ -5,6 +5,7 @@ CREATE TABLE IF NOT EXISTS churches (
     church_name VARCHAR(100),
     denomination VARCHAR(100),
     description TEXT,
+    website VARCHAR(50),
     email VARCHAR(100),
     phone_number VARCHAR(20),
     address VARCHAR(200),

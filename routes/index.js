@@ -168,12 +168,12 @@ router.post(
 );
 router.delete(
   '/churchusers/:id',
-  [isAuthenticated, canUpdateUser, validators.updateChurchUser],
+  [isAuthenticated, canUpdateUser, validators.deleteChurchUserById],
   churchUsersController.deleteChurchUsersById
 );
 router.delete(
   '/churchusers/user/:userId',
-  [isAuthenticated, canUpdateUser, validators.deleteChurchUserById],
+  [isAuthenticated, canUpdateUser, validators.deleteChurchUserByUserId],
   churchUsersController.deleteChurchUsersByUserId
 );
 router.delete(

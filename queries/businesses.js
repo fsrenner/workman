@@ -6,6 +6,7 @@ exports.CREATE_BUSINESS = `
     business_name,
     description,
     email,
+    website,
     phone_number,
     address,
     city,
@@ -24,8 +25,9 @@ exports.CREATE_BUSINESS = `
     $6,
     $7,
     $8,
-    CAST (EXTRACT (epoch from current_timestamp) AS BIGINT),
     $9,
+    CAST (EXTRACT (epoch from current_timestamp) AS BIGINT),
+    $10,
     null,
     null
   ) RETURNING *
